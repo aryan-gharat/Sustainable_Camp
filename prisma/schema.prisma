@@ -1,0 +1,571 @@
+// GreenCampus AI - Production Prisma Schema
+// PostgreSQL Database Schema for Sustainable Campus Management System
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// -------------------------------------------------------------
+// ENUMS
+// -------------------------------------------------------------
+
+enum Role {
+  STUDENT
+  FACULTY
+  ADMIN
+  MAINTENANCE_STAFF
+}
+
+enum BuildingCategory {
+  ACADEMIC
+  DORMITORY
+  LABORATORY
+  ADMINISTRATIVE
+  DINING
+  SPORTS_RECREATION
+  LIBRARY
+}
+
+enum MeterType {
+  ELECTRICITY
+  WATER
+  GAS
+  SOLAR_PV
+  HVAC_CHILLED_WATER
+}
+
+enum MeterStatus {
+  ACTIVE
+  CALIBRATION_NEEDED
+  OFFLINE
+  FAULT
+}
+
+enum WasteCategory {
+  ORGANIC_COMPOST
+  PLASTIC_RECYCLING
+  PAPER_CARDBOARD
+  ELECTRONIC_EWASTE
+  GENERAL_LANDFILL
+}
+
+enum WorkOrderCategory {
+  HVAC_ENERGY
+  PLUMBING_LEAK
+  ELECTRICAL_EFFICIENCY
+  SOLAR_ARRAY
+  WASTE_MANAGEMENT
+  INSULATION_WINDOWS
+  GENERAL_ECO_REPAIR
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL_URGENT
+}
+
+enum WorkOrderStatus {
+  SUBMITTED
+  ACKNOWLEDGED
+  ASSIGNED
+  IN_PROGRESS
+  RESOLVED
+  CANCELLED
+}
+
+enum QuestStatus {
+  PENDING_VERIFICATION
+  APPROVED
+  REJECTED
+}
+
+enum AnomalySeverity {
+  INFO
+  WARNING
+  CRITICAL
+}
+
+enum AIInsightStatus {
+  NEW
+  ACKNOWLEDGED
+  IMPLEMENTED
+  DISMISSED
+}
+
+// -------------------------------------------------------------
+// USER & RBAC MANAGEMENT
+// -------------------------------------------------------------
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String
+  name          String
+  role          Role      @default(STUDENT)
+  department    String?
+  studentId     String?   @unique
+  staffId       String?   @unique
+  avatarUrl     String?
+  isActive      Boolean   @default(true)
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relationships
+  profile               Profile?
+  workOrdersReported    WorkOrder[]           @relation("ReportedBy")
+  workOrdersAssigned    WorkOrder[]           @relation("AssignedTo")
+  questCompletions      QuestCompletion[]
+  ecoPointLogs          EcoPointLog[]
+  auditLogs             AuditLog[]
+  sustainabilityReports StudentReport[]
+  eventRegistrations     EventRegistration[]
+  rewardRedemptions      RewardRedemption[]
+  carbonCalculations     CarbonCalculation[]
+
+  @@index([role])
+  @@index([email])
+}
+
+model Profile {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  phone               String?
+  bio                 String?
+  preferredTheme      String   @default("system")
+  notificationEmail   Boolean  @default(true)
+  totalEcoPoints      Int      @default(0)
+  carbonSavedKg       Float    @default(0.0)
+  waterSavedLiters    Float    @default(0.0)
+  energySavedKwh      Float    @default(0.0)
+  streakDays          Int      @default(0)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+// -------------------------------------------------------------
+// CAMPUS INFRASTRUCTURE
+// -------------------------------------------------------------
+
+model Building {
+  id                   String           @id @default(cuid())
+  name                 String
+  code                 String           @unique
+  category             BuildingCategory @default(ACADEMIC)
+  grossFloorAreaSqM    Float
+  yearBuilt            Int?
+  occupancyCapacity    Int
+  solarPanelsInstalled Boolean          @default(false)
+  rainwaterHarvesting  Boolean          @default(false)
+  currentEnergyRating  String?          // e.g. "LEED Platinum", "A+", "B"
+  latitude             Float?
+  longitude            Float?
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+
+  // Relationships
+  rooms                Room[]
+  meters               UtilityMeter[]
+  solarLogs            SolarGenerationLog[]
+  wasteBins            WasteBin[]
+  workOrders           WorkOrder[]
+  anomalies            AnomalyAlert[]
+}
+
+model Room {
+  id                 String   @id @default(cuid())
+  buildingId         String
+  building           Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  roomNumber         String
+  floor              Int      @default(1)
+  roomType           String   // Classroom, Laboratory, Faculty Office, Lecture Hall
+  maxOccupancy       Int      @default(30)
+  smartSensorsActive Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@unique([buildingId, roomNumber])
+}
+
+// -------------------------------------------------------------
+// IOT RESOURCE MONITORING (ENERGY, WATER, SOLAR)
+// -------------------------------------------------------------
+
+model UtilityMeter {
+  id                  String         @id @default(cuid())
+  buildingId          String
+  building            Building       @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  meterType           MeterType
+  meterSerial         String         @unique
+  locationDescription String
+  unitOfMeasure       String         // "kWh", "m³", "Gallons"
+  status              MeterStatus    @default(ACTIVE)
+  lastTelemetryAt     DateTime?
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+
+  readings            MeterReading[]
+
+  @@index([meterType])
+  @@index([buildingId])
+}
+
+model MeterReading {
+  id                 String       @id @default(cuid())
+  meterId            String
+  meter              UtilityMeter @relation(fields: [meterId], references: [id], onDelete: Cascade)
+  timestamp          DateTime     @default(now())
+  value              Float        // Reading value in unitOfMeasure
+  peakDemandKw       Float?       // Peak electrical demand
+  carbonEquivalentKg Float        // Calculated GHG emission equivalent
+  costEstimateUsd    Float?       // Estimated financial cost
+  isEstimated        Boolean      @default(false)
+
+  @@index([meterId, timestamp])
+  @@index([timestamp])
+}
+
+model SolarGenerationLog {
+  id                 String    @id @default(cuid())
+  buildingId         String?
+  building           Building? @relation(fields: [buildingId], references: [id], onDelete: SetNull)
+  timestamp          DateTime  @default(now())
+  powerOutputKw      Float
+  energyGeneratedKwh Float
+  irradianceWPerM2   Float?
+  weatherCondition   String?   // "Sunny", "Partly Cloudy", "Overcast"
+  efficiencyRate     Float?    // Percentage (e.g. 19.5%)
+
+  @@index([timestamp])
+}
+
+// -------------------------------------------------------------
+// WATER & WASTE SYSTEMS
+// -------------------------------------------------------------
+
+model WaterStorageTank {
+  id                  String   @id @default(cuid())
+  name                String
+  location            String
+  capacityLiters      Float
+  currentLevelLiters  Float
+  isRainwaterCatchment Boolean @default(false)
+  leakDetected        Boolean  @default(false)
+  lastInspectedAt     DateTime?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model WasteBin {
+  id                  String        @id @default(cuid())
+  buildingId          String
+  building            Building      @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  binType             WasteCategory
+  locationDescription String
+  fillLevelPercentage Float         @default(0.0)
+  lastEmptiedAt       DateTime?
+  rfidTag             String?       @unique
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  logs                WasteLog[]
+
+  @@index([buildingId])
+  @@index([binType])
+}
+
+model WasteLog {
+  id            String   @id @default(cuid())
+  binId         String
+  bin           WasteBin @relation(fields: [binId], references: [id], onDelete: Cascade)
+  weightKg      Float
+  divertedFromLandfill Boolean @default(true)
+  timestamp     DateTime @default(now())
+
+  @@index([timestamp])
+}
+
+// -------------------------------------------------------------
+// MAINTENANCE & WORK ORDERS
+// -------------------------------------------------------------
+
+model WorkOrder {
+  id                    String            @id @default(cuid())
+  workOrderNumber       String            @unique
+  title                 String
+  description           String
+  category              WorkOrderCategory
+  priority              Priority          @default(MEDIUM)
+  status                WorkOrderStatus   @default(SUBMITTED)
+  locationDetails       String
+  buildingId            String?
+  building              Building?         @relation(fields: [buildingId], references: [id], onDelete: SetNull)
+  
+  reportedById          String
+  reportedBy            User              @relation("ReportedBy", fields: [reportedById], references: [id], onDelete: Restrict)
+  
+  assignedToId          String?
+  assignedTo            User?             @relation("AssignedTo", fields: [assignedToId], references: [id], onDelete: SetNull)
+  
+  beforeFixUrl          String?
+  afterFixUrl           String?
+  estimatedCarbonLossKg Float?
+  resolutionNotes       String?
+  resolvedAt            DateTime?
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+
+  @@index([status])
+  @@index([priority])
+  @@index([reportedById])
+  @@index([assignedToId])
+}
+
+// -------------------------------------------------------------
+// SUSTAINABILITY INITIATIVES & STUDENT GAMIFICATION
+// -------------------------------------------------------------
+
+model GreenQuest {
+  id               String            @id @default(cuid())
+  title            String
+  description      String
+  category         String            // "Energy Saving", "Waste Reduction", "Green Commute", "Water Conservation"
+  rewardEcoPoints  Int               @default(50)
+  co2ReductionEstKg Float            @default(2.5)
+  startDate        DateTime          @default(now())
+  endDate          DateTime?
+  isActive         Boolean           @default(true)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  completions      QuestCompletion[]
+}
+
+model QuestCompletion {
+  id           String      @id @default(cuid())
+  questId      String
+  quest        GreenQuest  @relation(fields: [questId], references: [id], onDelete: Cascade)
+  userId       String
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  proofNotes   String?
+  proofUrl     String?
+  status       QuestStatus @default(PENDING_VERIFICATION)
+  awardedPoints Int        @default(0)
+  completedAt  DateTime    @default(now())
+
+  @@unique([questId, userId])
+  @@index([userId])
+  @@index([status])
+}
+
+model EcoPointLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  points    Int
+  reason    String
+  loggedAt  DateTime @default(now())
+
+  @@index([userId])
+}
+
+// -------------------------------------------------------------
+// AI INTELLIGENCE & ANOMALY DETECTION
+// -------------------------------------------------------------
+
+model AIInsight {
+  id                        String          @id @default(cuid())
+  targetType                String          // "CAMPUS_WIDE", "BUILDING", "HVAC", "WATER"
+  targetId                  String?
+  title                     String
+  insightSummary            String
+  suggestedAction           String
+  confidenceScore           Float           // 0.0 - 1.0 (e.g. 0.94)
+  projectedSavingsKwh       Float?
+  projectedSavingsUsd       Float?
+  projectedCarbonReductionKg Float?
+  status                    AIInsightStatus @default(NEW)
+  createdAt                 DateTime        @default(now())
+  updatedAt                 DateTime        @updatedAt
+
+  @@index([status])
+  @@index([targetType])
+}
+
+model AnomalyAlert {
+  id                 String          @id @default(cuid())
+  severity           AnomalySeverity @default(WARNING)
+  anomalyType        String          // "SURGE_CONSUMPTION", "NIGHTTIME_LEAK", "SOLAR_EFFICIENCY_DROP"
+  buildingId         String?
+  building           Building?       @relation(fields: [buildingId], references: [id], onDelete: SetNull)
+  title              String
+  description        String
+  detectedAt         DateTime        @default(now())
+  isResolved         Boolean         @default(false)
+  resolvedAt         DateTime?
+  diagnosticDetails  String?
+
+  @@index([severity])
+  @@index([isResolved])
+}
+
+// -------------------------------------------------------------
+// AUDIT LOG
+// -------------------------------------------------------------
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action     String   // e.g. "USER_LOGIN", "WORK_ORDER_CREATED", "SETTINGS_UPDATED"
+  entityType String   // e.g. "User", "WorkOrder", "Building"
+  entityId   String?
+  ipAddress  String?
+  userAgent  String?
+  metadata   String?  // JSON string
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+// -------------------------------------------------------------
+// STUDENT MODULE: SUSTAINABILITY REPORTS & AUDITS
+// -------------------------------------------------------------
+
+model StudentReport {
+  id              String    @id @default(cuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title           String
+  category        String    // "ENERGY_WASTE", "WATER_LEAK", "PLASTIC_HAZARD", "TREE_PLANTING", "CAMPUS_AUDIT"
+  description     String
+  location        String
+  buildingName    String?
+  impactEstKgCo2  Float?    @default(0.0)
+  proofUrl        String?
+  beforeFixUrl    String?
+  afterFixUrl     String?
+  status          String    @default("PENDING") // "PENDING", "VERIFIED", "REJECTED"
+  pointsAwarded   Int       @default(0)
+  feedback        String?
+  verifiedAt      DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([category])
+}
+
+// -------------------------------------------------------------
+// STUDENT MODULE: CAMPUS SUSTAINABILITY EVENTS
+// -------------------------------------------------------------
+
+model CampusEvent {
+  id              String              @id @default(cuid())
+  title           String
+  description     String
+  category        String              // "CLEANUP_DRIVE", "TREE_PLANTING", "WORKSHOP", "HACKATHON", "ZERO_WASTE_FAIR"
+  location        String
+  eventDate       DateTime
+  durationMinutes Int                 @default(120)
+  ecoPoints       Int                 @default(100)
+  capacity        Int                 @default(50)
+  organizer       String              @default("Campus Green Initiative")
+  imageUrl        String?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  registrations   EventRegistration[]
+
+  @@index([eventDate])
+  @@index([category])
+}
+
+model EventRegistration {
+  id            String      @id @default(cuid())
+  eventId       String
+  event         CampusEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  registeredAt  DateTime    @default(now())
+  attended      Boolean     @default(false)
+  pointsClaimed Boolean     @default(false)
+
+  @@unique([eventId, userId])
+  @@index([userId])
+  @@index([eventId])
+}
+
+// -------------------------------------------------------------
+// STUDENT MODULE: REWARDS & VOUCHER REDEMPTIONS
+// -------------------------------------------------------------
+
+model Reward {
+  id          String             @id @default(cuid())
+  title       String
+  description String
+  category    String             // "DINING", "VOUCHER", "MERCHANDISE", "COMMUTE", "DONATION"
+  pointsCost  Int
+  stock       Int                @default(100)
+  codePrefix  String             @default("GC-ECO")
+  imageUrl    String?
+  isActive    Boolean            @default(true)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  redemptions RewardRedemption[]
+
+  @@index([category])
+  @@index([isActive])
+}
+
+model RewardRedemption {
+  id          String   @id @default(cuid())
+  rewardId    String
+  reward      Reward   @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  voucherCode String   @unique
+  pointsSpent Int
+  redeemedAt  DateTime @default(now())
+  expiresAt   DateTime
+  isUsed      Boolean  @default(false)
+
+  @@index([userId])
+  @@index([rewardId])
+}
+
+// -------------------------------------------------------------
+// STUDENT MODULE: CARBON FOOTPRINT CALCULATOR
+// -------------------------------------------------------------
+
+model CarbonCalculation {
+  id                   String   @id @default(cuid())
+  userId               String
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  commuteMode          String   // "BICYCLE", "WALKING", "CAMPUS_SHUTTLE", "PUBLIC_TRANSIT", "CARPOOL", "SOLO_CAR"
+  commuteKmPerWeek     Float
+  dietType             String   // "VEGAN", "VEGETARIAN", "PESCATARIAN", "BALANCED", "HIGH_MEAT"
+  dormElectricityHours Float
+  recyclingRate        Float    // 0 - 100 percentage
+  totalAnnualKgCo2     Float
+  transportKg          Float
+  dietKg               Float
+  energyKg             Float
+  wasteKg              Float
+  aiTip                String
+  createdAt            DateTime @default(now())
+
+  @@index([userId])
+}

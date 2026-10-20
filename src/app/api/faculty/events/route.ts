@@ -1,92 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import prebackend from "@/lib/prebackend";
 
 export async function GET() {
   try {
     const session = await getSession();
-
-    let events: any[] = [];
-
-    try {
-      const dbEvents = await prisma.campusEvent.findMany({
-        orderBy: { eventDate: "asc" },
-        include: {
-          registrations: {
-            include: { user: { select: { name: true, email: true, studentId: true } } },
-          },
-        },
-      });
-
-      if (dbEvents.length > 0) {
-        events = dbEvents.map((evt) => ({
-          ...evt,
-          registeredCount: evt.registrations.length,
-          attendees: evt.registrations.map((r) => ({
-            id: r.id,
-            userId: r.userId,
-            name: r.user.name,
-            email: r.user.email,
-            studentId: r.user.studentId,
-            attended: r.attended,
-            pointsClaimed: r.pointsClaimed,
-          })),
-        }));
-      }
-    } catch (err) {
-      console.warn("DB fallback for faculty events GET:", err);
-    }
-
-    if (events.length === 0) {
-      events = [
-        {
-          id: "evt-01",
-          title: "Campus Native Tree Planting Drive 2026",
-          category: "TREE_PLANTING",
-          description: "Planting 150 native saplings in the North Quad green belt.",
-          location: "North Quad Lawn & Solar Pavilion",
-          eventDate: new Date(Date.now() + 86400000 * 2).toISOString(),
-          durationMinutes: 180,
-          ecoPoints: 150,
-          capacity: 60,
-          registeredCount: 42,
-          organizer: "Dept of Renewable Energy & Student Council",
-          attendees: [
-            { id: "reg-1", name: "Aiden Sharma", email: "student@greencampus.ai", attended: false },
-            { id: "reg-2", name: "Maya Lin", email: "maya@greencampus.ai", attended: true },
-          ],
-        },
-        {
-          id: "evt-02",
-          title: "Zero-Waste Culinary & Composting Seminar",
-          category: "WORKSHOP",
-          description: "Hands-on workshop on institutional food waste reduction.",
-          location: "Student Union Dining Hall Kitchen B",
-          eventDate: new Date(Date.now() + 86400000 * 5).toISOString(),
-          durationMinutes: 90,
-          ecoPoints: 80,
-          capacity: 35,
-          registeredCount: 28,
-          organizer: "Faculty Eco-Commission",
-          attendees: [],
-        },
-        {
-          id: "evt-03",
-          title: "Campus Smart Microgrid AI Hackathon",
-          category: "HACKATHON",
-          description: "24-hour green computing and solar forecast modeling hackathon.",
-          location: "Solar Science Complex Innovation Hub",
-          eventDate: new Date(Date.now() + 86400000 * 12).toISOString(),
-          durationMinutes: 720,
-          ecoPoints: 250,
-          capacity: 80,
-          registeredCount: 65,
-          organizer: "Faculty & Student IEEE Section",
-          attendees: [],
-        },
-      ];
-    }
-
+    const events = prebackend.getAllEvents();
     return NextResponse.json({ success: true, events });
   } catch (error) {
     console.error("Faculty events GET error:", error);
@@ -118,11 +38,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let createdEvent: any = null;
+    const createdEvent = prebackend.createEvent({
+      title,
+      category,
+      description,
+      location,
+      eventDate,
+      durationMinutes: Number(durationMinutes) || 120,
+      ecoPoints: Number(ecoPoints) || 100,
+      capacity: Number(capacity) || 50,
+      organizer,
+    });
 
+    // Optional background sync with Prisma
     try {
-      createdEvent = await prisma.campusEvent.create({
+      await prisma.campusEvent.create({
         data: {
+          id: createdEvent.id,
           title,
           category,
           description,
@@ -134,30 +66,13 @@ export async function POST(request: NextRequest) {
           organizer,
         },
       });
-    } catch (err) {
-      console.warn("DB fallback for faculty event creation:", err);
-    }
-
-    if (!createdEvent) {
-      createdEvent = {
-        id: `evt-${Date.now()}`,
-        title,
-        category,
-        description,
-        location,
-        eventDate,
-        durationMinutes: Number(durationMinutes) || 120,
-        ecoPoints: Number(ecoPoints) || 100,
-        capacity: Number(capacity) || 50,
-        organizer,
-        registeredCount: 0,
-        createdAt: new Date().toISOString(),
-      };
+    } catch {
+      // Prisma offline
     }
 
     return NextResponse.json({
       success: true,
-      message: "Campus green event published successfully!",
+      message: "Campus green event published and saved successfully!",
       event: createdEvent,
     });
   } catch (error) {
@@ -175,12 +90,15 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Event ID is required." }, { status: 400 });
     }
 
+    prebackend.deleteEvent(eventId);
+
+    // Optional background sync
     try {
       await prisma.campusEvent.delete({
         where: { id: eventId },
       });
-    } catch (err) {
-      console.warn("DB fallback for event deletion:", err);
+    } catch {
+      // Prisma offline
     }
 
     return NextResponse.json({

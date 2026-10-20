@@ -11,7 +11,6 @@ import {
   BookOpen,
   Bike,
   TreePine,
-  Sparkles,
   CheckCircle2,
   Copy,
   Clock,
@@ -244,7 +243,7 @@ export default function StudentRewardsPage() {
                     disabled={!canAfford || processingId === reward.id || reward.stock <= 0}
                     className="text-xs gap-1.5"
                   >
-                    <Sparkles className="h-3.5 w-3.5" />
+                    <Gift className="h-3.5 w-3.5" />
                     {processingId === reward.id
                       ? "Redeeming..."
                       : reward.stock <= 0

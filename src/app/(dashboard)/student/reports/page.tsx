@@ -17,7 +17,6 @@ import {
   Trash2,
   TreePine,
   Building,
-  Sparkles,
   MapPin,
   Send,
   Filter,
@@ -307,16 +306,16 @@ export default function StudentReportsPage() {
 
       {/* Submit Report Modal with Image Upload */}
       {showSubmitModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="w-full max-w-lg glass-card border border-emerald-500/30 rounded-2xl p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4">
+          <div className="w-full max-w-lg bg-[#0F1626] border border-slate-700 rounded-xl p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-emerald-400" />
-                Submit Eco Audit & Before-Fix Photo
+              <h3 className="text-sm font-semibold text-slate-100 flex items-center gap-2">
+                <FileText className="h-4 w-4 text-emerald-400" />
+                Submit Environmental Audit Report
               </h3>
               <button
                 onClick={() => setShowSubmitModal(false)}
-                className="text-slate-400 hover:text-white text-lg font-bold"
+                className="text-slate-400 hover:text-white text-sm font-bold"
               >
                 ✕
               </button>

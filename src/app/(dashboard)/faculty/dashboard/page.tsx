@@ -13,7 +13,7 @@ import {
   Calendar,
   ClipboardList,
   ArrowRight,
-  Sparkles,
+  School,
   CheckCircle2,
   AlertTriangle,
   Clock,
@@ -65,13 +65,13 @@ export default function FacultyDashboardPage() {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <RoleBadge role="FACULTY" size="sm" />
-            <span className="text-xs text-blue-400 font-semibold bg-blue-950/60 px-2 py-0.5 rounded-full border border-blue-500/30">
+            <span className="text-[11px] text-slate-300 font-medium bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
               {dept.name}
             </span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white flex items-center gap-2">
-            Faculty Sustainability Command Center
-            <Sparkles className="h-5 w-5 text-blue-400" />
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-100 flex items-center gap-2">
+            Faculty Operations Console
+            <School className="h-5 w-5 text-sky-400" />
           </h2>
           <p className="text-xs sm:text-sm text-slate-400 mt-1">
             Departmental telemetry, student eco-participation tracking, campus events & report approvals

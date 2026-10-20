@@ -15,7 +15,7 @@ import {
   Mail,
   AlertCircle,
   Loader2,
-  Sparkles,
+  Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -25,39 +25,34 @@ const DEMO_PRESETS: {
   name: string;
   email: string;
   icon: typeof Shield;
-  color: string;
 }[] = [
   {
     role: "ADMIN",
-    title: "Administrator",
+    title: "Campus Administrator",
     name: "Dr. Elena Vance",
     email: "admin@greencampus.ai",
     icon: Shield,
-    color: "border-purple-500/40 hover:bg-purple-950/30 text-purple-300",
   },
   {
     role: "FACULTY",
-    title: "Faculty / Research",
+    title: "Faculty & Researcher",
     name: "Prof. Marcus Thorne",
     email: "faculty@greencampus.ai",
     icon: School,
-    color: "border-blue-500/40 hover:bg-blue-950/30 text-blue-300",
   },
   {
     role: "STUDENT",
-    title: "Student Eco-Lead",
+    title: "Student Representative",
     name: "Aiden Sharma",
     email: "student@greencampus.ai",
     icon: GraduationCap,
-    color: "border-emerald-500/40 hover:bg-emerald-950/30 text-emerald-300",
   },
   {
     role: "MAINTENANCE_STAFF",
-    title: "Facilities Engineer",
+    title: "Facilities Specialist",
     name: "Carlos Mendez",
     email: "maintenance@greencampus.ai",
     icon: Wrench,
-    color: "border-amber-500/40 hover:bg-amber-950/30 text-amber-300",
   },
 ];
 
@@ -118,17 +113,17 @@ export function LoginForm() {
 
   return (
     <div className="w-full max-w-md space-y-6">
-      <div className="space-y-2 text-center">
-        <h2 className="text-2xl font-bold tracking-tight text-white">
-          Sign In to GreenCampus AI
+      <div className="space-y-1.5 text-center">
+        <h2 className="text-2xl font-bold tracking-tight text-slate-100">
+          GreenCampus Operations
         </h2>
         <p className="text-xs text-slate-400">
-          Enter institutional credentials to access your designated role console
+          Enter institutional credentials to access your designated facilities console
         </p>
       </div>
 
       {error && (
-        <div className="flex items-start gap-2.5 rounded-lg border border-rose-500/40 bg-rose-950/30 p-3 text-xs text-rose-300">
+        <div className="flex items-start gap-2.5 rounded-md border border-rose-800/60 bg-rose-950/40 p-3 text-xs text-rose-300">
           <AlertCircle className="h-4 w-4 shrink-0 text-rose-400 mt-0.5" />
           <p>{error}</p>
         </div>
@@ -141,12 +136,12 @@ export function LoginForm() {
             Institutional Email
           </label>
           <div className="relative">
-            <Mail className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+            <Mail className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
             <Input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="user@greencampus.ai"
+              placeholder="operator@university.edu"
               className="pl-9"
               required
             />
@@ -156,10 +151,10 @@ export function LoginForm() {
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
             <label className="text-xs font-medium text-slate-300">Password</label>
-            <span className="text-[11px] text-emerald-400/80">Demo: green2026!</span>
+            <span className="text-[11px] text-slate-400">Default: green2026!</span>
           </div>
           <div className="relative">
-            <Lock className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+            <Lock className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
             <Input
               type="password"
               value={password}
@@ -180,10 +175,10 @@ export function LoginForm() {
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Authenticating...
+              Verifying Credentials...
             </>
           ) : (
-            "Authenticate Session"
+            "Sign In to Operations"
           )}
         </Button>
       </form>
@@ -194,9 +189,9 @@ export function LoginForm() {
           <div className="absolute inset-0 flex items-center">
             <span className="w-full border-t border-slate-800" />
           </div>
-          <span className="relative bg-slate-950 px-3 text-[11px] uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1">
-            <Sparkles className="h-3 w-3 text-emerald-400" />
-            1-Click Role Quick Login
+          <span className="relative bg-[#090D16] px-3 text-[11px] uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1.5">
+            <Users className="h-3.5 w-3.5 text-slate-400" />
+            Evaluation Profiles
           </span>
         </div>
 
@@ -209,14 +204,11 @@ export function LoginForm() {
                 type="button"
                 onClick={() => handleSelectDemo(p.email)}
                 disabled={loading}
-                className={cn(
-                  "flex flex-col items-start rounded-lg border p-2.5 text-left transition duration-200 bg-slate-900/60 backdrop-blur-sm",
-                  p.color
-                )}
+                className="flex flex-col items-start rounded-md border border-slate-800 bg-[#0F1626] p-2.5 text-left transition hover:border-slate-700 hover:bg-[#141E34]"
               >
-                <div className="flex items-center gap-1.5 mb-1">
-                  <Icon className="h-3.5 w-3.5" />
-                  <span className="text-xs font-semibold">{p.title}</span>
+                <div className="flex items-center gap-1.5 mb-1 text-slate-200">
+                  <Icon className="h-3.5 w-3.5 text-slate-400" />
+                  <span className="text-xs font-medium">{p.title}</span>
                 </div>
                 <span className="text-[11px] text-slate-400 truncate w-full">
                   {p.name}
@@ -229,12 +221,12 @@ export function LoginForm() {
 
       {/* Registration Link */}
       <div className="text-center text-xs text-slate-400 pt-2 border-t border-slate-800">
-        Need an account?{" "}
+        Need campus credentials?{" "}
         <Link
           href="/register"
           className="font-medium text-emerald-400 hover:text-emerald-300 underline underline-offset-4"
         >
-          Register for Campus Access
+          Register New Account
         </Link>
       </div>
     </div>

@@ -10,7 +10,6 @@ import {
   Flame,
   Building,
   GraduationCap,
-  Sparkles,
   Search,
   UserCheck,
   TrendingUp,

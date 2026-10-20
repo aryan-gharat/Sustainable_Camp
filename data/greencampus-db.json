@@ -1,0 +1,878 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-10-20T12:46:59.958Z",
+  "users": [
+    {
+      "id": "usr-admin-01",
+      "email": "admin@greencampus.ai",
+      "name": "Dr. Elena Vance",
+      "passwordHash": "$2a$10$kF6/Iq4FQktIbg81tOvD2eQR/BmQH3wvCbQWoWTORD8rOnexmG.JO",
+      "role": "ADMIN",
+      "department": "Office of the President & Sustainability Council",
+      "studentId": null,
+      "staffId": "ADM-9021",
+      "avatarUrl": null,
+      "isActive": true,
+      "lastLoginAt": "2026-10-20T12:46:59.958Z",
+      "createdAt": "2026-08-21T12:46:59.959Z",
+      "updatedAt": "2026-10-20T12:46:59.958Z"
+    },
+    {
+      "id": "usr-fac-01",
+      "email": "faculty@greencampus.ai",
+      "name": "Prof. Marcus Thorne",
+      "passwordHash": "$2a$10$kF6/Iq4FQktIbg81tOvD2eQR/BmQH3wvCbQWoWTORD8rOnexmG.JO",
+      "role": "FACULTY",
+      "department": "Dept of Renewable Energy & IoT Engineering",
+      "studentId": null,
+      "staffId": "FAC-4402",
+      "avatarUrl": null,
+      "isActive": true,
+      "lastLoginAt": "2026-10-20T12:46:59.958Z",
+      "createdAt": "2026-09-05T12:46:59.959Z",
+      "updatedAt": "2026-10-20T12:46:59.958Z"
+    },
+    {
+      "id": "usr-stu-01",
+      "email": "student@greencampus.ai",
+      "name": "Aiden Sharma",
+      "passwordHash": "$2a$10$kF6/Iq4FQktIbg81tOvD2eQR/BmQH3wvCbQWoWTORD8rOnexmG.JO",
+      "role": "STUDENT",
+      "department": "Environmental Engineering '27",
+      "studentId": "STU-88412",
+      "staffId": null,
+      "avatarUrl": null,
+      "isActive": true,
+      "lastLoginAt": "2026-10-20T12:46:59.958Z",
+      "createdAt": "2026-09-20T12:46:59.959Z",
+      "updatedAt": "2026-10-20T12:46:59.958Z"
+    },
+    {
+      "id": "usr-mnt-01",
+      "email": "maintenance@greencampus.ai",
+      "name": "Carlos Mendez",
+      "passwordHash": "$2a$10$kF6/Iq4FQktIbg81tOvD2eQR/BmQH3wvCbQWoWTORD8rOnexmG.JO",
+      "role": "MAINTENANCE_STAFF",
+      "department": "Campus Facilities & Smart HVAC Operations",
+      "studentId": null,
+      "staffId": "MNT-1092",
+      "avatarUrl": null,
+      "isActive": true,
+      "lastLoginAt": "2026-10-20T12:46:59.958Z",
+      "createdAt": "2026-09-30T12:46:59.959Z",
+      "updatedAt": "2026-10-20T12:46:59.958Z"
+    },
+    {
+      "id": "usr-stu-02",
+      "email": "maya.lin@greencampus.ai",
+      "name": "Maya Lin",
+      "passwordHash": "$2a$10$kF6/Iq4FQktIbg81tOvD2eQR/BmQH3wvCbQWoWTORD8rOnexmG.JO",
+      "role": "STUDENT",
+      "department": "Renewable Energy & Robotics '26",
+      "studentId": "STU-99014",
+      "staffId": null,
+      "avatarUrl": null,
+      "isActive": true,
+      "lastLoginAt": "2026-10-19T12:46:59.959Z",
+      "createdAt": "2026-09-10T12:46:59.959Z",
+      "updatedAt": "2026-10-19T12:46:59.959Z"
+    },
+    {
+      "id": "usr-stu-03",
+      "email": "liam.oc@greencampus.ai",
+      "name": "Liam O'Connor",
+      "passwordHash": "$2a$10$kF6/Iq4FQktIbg81tOvD2eQR/BmQH3wvCbQWoWTORD8rOnexmG.JO",
+      "role": "STUDENT",
+      "department": "Civil & Environmental Engineering '25",
+      "studentId": "STU-77218",
+      "staffId": null,
+      "avatarUrl": null,
+      "isActive": true,
+      "lastLoginAt": "2026-10-18T12:46:59.959Z",
+      "createdAt": "2026-09-15T12:46:59.959Z",
+      "updatedAt": "2026-10-18T12:46:59.959Z"
+    }
+  ],
+  "profiles": [
+    {
+      "id": "prof-admin-01",
+      "userId": "usr-admin-01",
+      "bio": "VP of Campus Infrastructure and Chief Sustainability Officer.",
+      "totalEcoPoints": 1250,
+      "carbonSavedKg": 340.5,
+      "waterSavedLiters": 2400,
+      "streakDays": 45,
+      "createdAt": "2026-08-21T12:46:59.959Z",
+      "updatedAt": "2026-10-20T12:46:59.958Z"
+    },
+    {
+      "id": "prof-fac-01",
+      "userId": "usr-fac-01",
+      "bio": "Principal Investigator on Microgrid IoT and Smart Sensor networks.",
+      "totalEcoPoints": 890,
+      "carbonSavedKg": 215,
+      "waterSavedLiters": 1800,
+      "streakDays": 28,
+      "createdAt": "2026-09-05T12:46:59.959Z",
+      "updatedAt": "2026-10-20T12:46:59.958Z"
+    },
+    {
+      "id": "prof-stu-01",
+      "userId": "usr-stu-01",
+      "bio": "Campus Eco-Club Lead and Sustainable Commute Ambassador.",
+      "totalEcoPoints": 580,
+      "carbonSavedKg": 122.4,
+      "waterSavedLiters": 1400,
+      "streakDays": 19,
+      "createdAt": "2026-09-20T12:46:59.959Z",
+      "updatedAt": "2026-10-20T12:46:59.958Z"
+    },
+    {
+      "id": "prof-mnt-01",
+      "userId": "usr-mnt-01",
+      "bio": "Lead Facilities Specialist certified in high-efficiency heat pump systems.",
+      "totalEcoPoints": 720,
+      "carbonSavedKg": 680,
+      "waterSavedLiters": 5200,
+      "streakDays": 34,
+      "createdAt": "2026-09-30T12:46:59.959Z",
+      "updatedAt": "2026-10-20T12:46:59.958Z"
+    },
+    {
+      "id": "prof-stu-02",
+      "userId": "usr-stu-02",
+      "bio": "Solar engineering student & campus zero-waste coordinator.",
+      "totalEcoPoints": 1240,
+      "carbonSavedKg": 310.5,
+      "waterSavedLiters": 3200,
+      "streakDays": 42,
+      "createdAt": "2026-09-10T12:46:59.960Z",
+      "updatedAt": "2026-10-19T12:46:59.960Z"
+    },
+    {
+      "id": "prof-stu-03",
+      "userId": "usr-stu-03",
+      "bio": "Sustainable concrete researcher & transit advocate.",
+      "totalEcoPoints": 980,
+      "carbonSavedKg": 245,
+      "waterSavedLiters": 2100,
+      "streakDays": 31,
+      "createdAt": "2026-09-15T12:46:59.960Z",
+      "updatedAt": "2026-10-18T12:46:59.960Z"
+    }
+  ],
+  "buildings": [
+    {
+      "id": "bld-01",
+      "name": "Solar Science & Tech Complex",
+      "code": "BLD-SCI-01",
+      "category": "LABORATORY",
+      "grossFloorAreaSqM": 14500,
+      "yearBuilt": 2021,
+      "occupancyCapacity": 650,
+      "solarPanelsInstalled": true,
+      "rainwaterHarvesting": true,
+      "currentEnergyRating": "LEED Platinum",
+      "createdAt": "2026-06-22T12:46:59.960Z",
+      "updatedAt": "2026-10-20T12:46:59.958Z"
+    },
+    {
+      "id": "bld-02",
+      "name": "Verdant Academic Quad",
+      "code": "BLD-ACAD-02",
+      "category": "ACADEMIC",
+      "grossFloorAreaSqM": 22000,
+      "yearBuilt": 2018,
+      "occupancyCapacity": 1200,
+      "solarPanelsInstalled": true,
+      "rainwaterHarvesting": true,
+      "currentEnergyRating": "LEED Gold",
+      "createdAt": "2026-06-22T12:46:59.960Z",
+      "updatedAt": "2026-10-20T12:46:59.958Z"
+    },
+    {
+      "id": "bld-03",
+      "name": "EcoLiving Dormitory Cluster",
+      "code": "BLD-DORM-03",
+      "category": "DORMITORY",
+      "grossFloorAreaSqM": 11200,
+      "yearBuilt": 2023,
+      "occupancyCapacity": 450,
+      "solarPanelsInstalled": true,
+      "rainwaterHarvesting": false,
+      "currentEnergyRating": "Net-Zero Ready",
+      "createdAt": "2026-07-12T12:46:59.960Z",
+      "updatedAt": "2026-10-20T12:46:59.958Z"
+    },
+    {
+      "id": "bld-04",
+      "name": "Central Memorial Library",
+      "code": "BLD-LIB-04",
+      "category": "LIBRARY",
+      "grossFloorAreaSqM": 16800,
+      "yearBuilt": 2012,
+      "occupancyCapacity": 900,
+      "solarPanelsInstalled": false,
+      "rainwaterHarvesting": false,
+      "currentEnergyRating": "EnergyStar 88",
+      "createdAt": "2026-05-23T12:46:59.960Z",
+      "updatedAt": "2026-10-20T12:46:59.958Z"
+    },
+    {
+      "id": "bld-05",
+      "name": "Student Union Dining Pavilion",
+      "code": "BLD-DINE-05",
+      "category": "DINING",
+      "grossFloorAreaSqM": 8500,
+      "yearBuilt": 2019,
+      "occupancyCapacity": 800,
+      "solarPanelsInstalled": true,
+      "rainwaterHarvesting": true,
+      "currentEnergyRating": "LEED Silver",
+      "createdAt": "2026-07-22T12:46:59.960Z",
+      "updatedAt": "2026-10-20T12:46:59.958Z"
+    }
+  ],
+  "utilityMeters": [
+    {
+      "id": "m-01",
+      "buildingId": "bld-01",
+      "meterType": "ELECTRICITY",
+      "meterSerial": "MTR-BLD-SCI-01-ELEC",
+      "locationDescription": "Main Switchgear Sub-panel A",
+      "unitOfMeasure": "kWh",
+      "status": "ACTIVE",
+      "lastTelemetryAt": "2026-10-20T12:46:59.958Z",
+      "createdAt": "2026-07-12T12:46:59.960Z"
+    },
+    {
+      "id": "m-02",
+      "buildingId": "bld-01",
+      "meterType": "SOLAR_PV",
+      "meterSerial": "SOLAR-INV-420KW",
+      "locationDescription": "Rooftop PV 420kW Inverter Array",
+      "unitOfMeasure": "kW",
+      "status": "ACTIVE",
+      "lastTelemetryAt": "2026-10-20T12:46:59.958Z",
+      "createdAt": "2026-07-12T12:46:59.960Z"
+    },
+    {
+      "id": "m-03",
+      "buildingId": "bld-01",
+      "meterType": "HVAC_CHILLED_WATER",
+      "meterSerial": "CHILL-SCI-01-B",
+      "locationDescription": "Basement Chiller Loop Pump Array 3",
+      "unitOfMeasure": "kW",
+      "status": "ACTIVE",
+      "lastTelemetryAt": "2026-10-20T12:46:59.958Z",
+      "createdAt": "2026-07-22T12:46:59.960Z"
+    },
+    {
+      "id": "m-04",
+      "buildingId": "bld-02",
+      "meterType": "ELECTRICITY",
+      "meterSerial": "MTR-BLD-ACAD-02-ELEC",
+      "locationDescription": "Verdant Quad Main Distribution Panel",
+      "unitOfMeasure": "kWh",
+      "status": "ACTIVE",
+      "lastTelemetryAt": "2026-10-20T12:46:59.958Z",
+      "createdAt": "2026-07-12T12:46:59.960Z"
+    },
+    {
+      "id": "m-05",
+      "buildingId": "bld-02",
+      "meterType": "WATER",
+      "meterSerial": "MTR-ACAD-02-WATER",
+      "locationDescription": "Verdant Quad Main Water Vault A",
+      "unitOfMeasure": "L/hr",
+      "status": "ACTIVE",
+      "lastTelemetryAt": "2026-10-20T12:46:59.958Z",
+      "createdAt": "2026-07-12T12:46:59.960Z"
+    },
+    {
+      "id": "m-06",
+      "buildingId": "bld-03",
+      "meterType": "ELECTRICITY",
+      "meterSerial": "MTR-BLD-DORM-03-ELEC",
+      "locationDescription": "EcoLiving Dorm Breaker Room 1",
+      "unitOfMeasure": "kWh",
+      "status": "ACTIVE",
+      "lastTelemetryAt": "2026-10-20T12:46:59.958Z",
+      "createdAt": "2026-08-01T12:46:59.960Z"
+    },
+    {
+      "id": "m-07",
+      "buildingId": "bld-04",
+      "meterType": "ELECTRICITY",
+      "meterSerial": "ELEC-LIB-04-EAST",
+      "locationDescription": "Central Library Electrical Room 3",
+      "unitOfMeasure": "kWh",
+      "status": "CALIBRATION_NEEDED",
+      "lastTelemetryAt": "2026-10-19T12:46:59.960Z",
+      "createdAt": "2026-06-22T12:46:59.960Z"
+    }
+  ],
+  "meterReadings": [
+    {
+      "id": "rd-1",
+      "meterId": "m-01",
+      "timestamp": "2026-10-20T12:46:59.958Z",
+      "value": 28.4,
+      "unit": "kW",
+      "carbonEquivalentKg": 12.8
+    },
+    {
+      "id": "rd-2",
+      "meterId": "m-02",
+      "timestamp": "2026-10-20T12:46:59.958Z",
+      "value": 420,
+      "unit": "kW",
+      "carbonEquivalentKg": 0
+    },
+    {
+      "id": "rd-3",
+      "meterId": "m-03",
+      "timestamp": "2026-10-20T12:46:59.958Z",
+      "value": 18.2,
+      "unit": "kW",
+      "carbonEquivalentKg": 8.2
+    },
+    {
+      "id": "rd-4",
+      "meterId": "m-04",
+      "timestamp": "2026-10-20T12:46:59.958Z",
+      "value": 34.2,
+      "unit": "kW",
+      "carbonEquivalentKg": 15.4
+    },
+    {
+      "id": "rd-5",
+      "meterId": "m-05",
+      "timestamp": "2026-10-20T12:46:59.958Z",
+      "value": 340,
+      "unit": "L/hr",
+      "carbonEquivalentKg": 1.2
+    },
+    {
+      "id": "rd-6",
+      "meterId": "m-06",
+      "timestamp": "2026-10-20T12:46:59.958Z",
+      "value": 18.5,
+      "unit": "kW",
+      "carbonEquivalentKg": 8.3
+    },
+    {
+      "id": "rd-7",
+      "meterId": "m-07",
+      "timestamp": "2026-10-20T12:46:59.958Z",
+      "value": 38,
+      "unit": "kW",
+      "carbonEquivalentKg": 17.1
+    }
+  ],
+  "workOrders": [
+    {
+      "id": "wo-101",
+      "workOrderNumber": "WO-2026-081",
+      "title": "Acoustic Leak in Science Complex Chilled Loop",
+      "description": "IoT telemetry & student report detected continuous 12.4 L/min flow during closed campus hours.",
+      "category": "PLUMBING_LEAK",
+      "priority": "HIGH",
+      "status": "IN_PROGRESS",
+      "locationDetails": "Sub-basement mechanical room near Pump Array 3",
+      "buildingName": "Solar Science & Tech Complex",
+      "buildingId": "bld-01",
+      "reportedById": "usr-stu-01",
+      "assignedToId": "usr-mnt-01",
+      "estimatedCarbonLossKg": 45,
+      "resolutionNotes": null,
+      "resolvedAt": null,
+      "createdAt": "2026-10-19T12:46:59.960Z",
+      "updatedAt": "2026-10-20T12:46:59.958Z"
+    },
+    {
+      "id": "wo-102",
+      "workOrderNumber": "WO-2026-084",
+      "title": "Overnight Hallway Lighting Automation Override",
+      "description": "Smart lighting override reset required for 3rd floor East Wing classrooms.",
+      "category": "ELECTRICAL_EFFICIENCY",
+      "priority": "MEDIUM",
+      "status": "ASSIGNED",
+      "locationDetails": "Verdant Quad 3rd Floor East Wing",
+      "buildingName": "Verdant Academic Quad",
+      "buildingId": "bld-02",
+      "reportedById": "usr-stu-02",
+      "assignedToId": "usr-mnt-01",
+      "estimatedCarbonLossKg": 32,
+      "resolutionNotes": null,
+      "resolvedAt": null,
+      "createdAt": "2026-10-18T12:46:59.960Z",
+      "updatedAt": "2026-10-19T12:46:59.960Z"
+    },
+    {
+      "id": "wo-103",
+      "workOrderNumber": "WO-2026-079",
+      "title": "HVAC Thermostat Sensor Recalibration",
+      "description": "Library reading room thermostat exhibiting +3°C temperature drift.",
+      "category": "HVAC_ENERGY",
+      "priority": "LOW",
+      "status": "RESOLVED",
+      "locationDetails": "Central Library 2.4 Lounge",
+      "buildingName": "Central Memorial Library",
+      "buildingId": "bld-04",
+      "reportedById": "usr-stu-03",
+      "assignedToId": "usr-mnt-01",
+      "estimatedCarbonLossKg": 15,
+      "resolutionNotes": "Recalibrated temperature sensor & updated deep-sleep firmware. Saved 18.5 kWh daily.",
+      "resolvedAt": "2026-10-17T12:46:59.960Z",
+      "createdAt": "2026-10-15T12:46:59.960Z",
+      "updatedAt": "2026-10-17T12:46:59.960Z"
+    }
+  ],
+  "studentReports": [
+    {
+      "id": "rep-101",
+      "userId": "usr-stu-01",
+      "title": "Chilled Water Pipe Micro-Leak in Science Complex",
+      "category": "WATER_LEAK",
+      "description": "Noticed steady water dripping under Science Complex Basement Chiller Pump Array B. Loss estimated at 5 L/min.",
+      "location": "Science Complex Basement Mechanical Room B",
+      "buildingName": "Solar Science & Tech Complex",
+      "impactEstKgCo2": 18.5,
+      "proofUrl": null,
+      "status": "PENDING",
+      "pointsAwarded": 20,
+      "feedback": "Report received and queued for facility inspection.",
+      "verifiedAt": null,
+      "createdAt": "2026-10-19T12:46:59.960Z",
+      "updatedAt": "2026-10-19T12:46:59.960Z"
+    },
+    {
+      "id": "rep-102",
+      "userId": "usr-stu-02",
+      "title": "Unnecessary Overnight Hallway Lighting Surge",
+      "category": "ENERGY_WASTE",
+      "description": "All 3rd floor classroom spotlights remain on 100% brightness past 2 AM on weekends.",
+      "location": "Verdant Quad 3rd Floor East Wing",
+      "buildingName": "Verdant Academic Quad",
+      "impactEstKgCo2": 32,
+      "proofUrl": null,
+      "status": "PENDING",
+      "pointsAwarded": 20,
+      "feedback": null,
+      "verifiedAt": null,
+      "createdAt": "2026-10-18T12:46:59.960Z",
+      "updatedAt": "2026-10-18T12:46:59.960Z"
+    },
+    {
+      "id": "rep-103",
+      "userId": "usr-stu-03",
+      "title": "Single-Use Plastic Straw Usage at Cafe",
+      "category": "PLASTIC_HAZARD",
+      "description": "Single-use plastic straws were served instead of compostable paper alternatives.",
+      "location": "Student Union Main Food Court",
+      "buildingName": "Student Union Dining Pavilion",
+      "impactEstKgCo2": 5,
+      "proofUrl": null,
+      "status": "VERIFIED",
+      "pointsAwarded": 50,
+      "feedback": "Verified by Faculty Sustainability Board. Work order sent to dining operations.",
+      "verifiedAt": "2026-10-17T12:46:59.960Z",
+      "createdAt": "2026-10-16T12:46:59.960Z",
+      "updatedAt": "2026-10-17T12:46:59.960Z"
+    },
+    {
+      "id": "rep-104",
+      "userId": "usr-stu-01",
+      "title": "Quad Native Tree Planting Site Proposal",
+      "category": "TREE_PLANTING",
+      "description": "Identified empty soil bed near Library entrance suitable for 4 native oak saplings.",
+      "location": "Central Library Quad Entrance",
+      "buildingName": "Central Memorial Library",
+      "impactEstKgCo2": 120,
+      "proofUrl": null,
+      "status": "VERIFIED",
+      "pointsAwarded": 75,
+      "feedback": "Approved by Admin Board for upcoming Green Campus Tree Planting Drive.",
+      "verifiedAt": "2026-10-15T12:46:59.960Z",
+      "createdAt": "2026-10-13T12:46:59.960Z",
+      "updatedAt": "2026-10-15T12:46:59.960Z"
+    }
+  ],
+  "campusEvents": [
+    {
+      "id": "evt-01",
+      "title": "Campus Native Tree Planting Drive 2026",
+      "category": "TREE_PLANTING",
+      "description": "Planting 150 native saplings in the North Quad green belt to increase campus tree canopy.",
+      "location": "North Quad Lawn & Solar Pavilion",
+      "eventDate": "2026-10-22T12:46:59.960Z",
+      "durationMinutes": 180,
+      "ecoPoints": 150,
+      "capacity": 60,
+      "organizer": "Dept of Renewable Energy & Student Council",
+      "createdAt": "2026-10-10T12:46:59.960Z"
+    },
+    {
+      "id": "evt-02",
+      "title": "Zero-Waste Culinary & Composting Seminar",
+      "category": "WORKSHOP",
+      "description": "Hands-on workshop on institutional food waste reduction, smart sorting, and bokashi composting.",
+      "location": "Student Union Dining Hall Kitchen B",
+      "eventDate": "2026-10-25T12:46:59.960Z",
+      "durationMinutes": 90,
+      "ecoPoints": 80,
+      "capacity": 35,
+      "organizer": "Faculty Eco-Commission",
+      "createdAt": "2026-10-12T12:46:59.960Z"
+    },
+    {
+      "id": "evt-03",
+      "title": "Campus Smart Microgrid AI Hackathon",
+      "category": "HACKATHON",
+      "description": "24-hour green computing, solar forecasting, and IoT anomaly detection challenge with prizes.",
+      "location": "Solar Science Complex Innovation Hub",
+      "eventDate": "2026-11-01T12:46:59.960Z",
+      "durationMinutes": 720,
+      "ecoPoints": 250,
+      "capacity": 80,
+      "organizer": "Faculty & Student IEEE Section",
+      "createdAt": "2026-10-06T12:46:59.960Z"
+    },
+    {
+      "id": "evt-04",
+      "title": "Campus E-Bike Fleet Maintenance & Safety Clinic",
+      "category": "COMMUTE",
+      "description": "Learn essential e-bike maintenance, tire pressure optimization, and battery conservation.",
+      "location": "West Gate Bike Hub",
+      "eventDate": "2026-10-27T12:46:59.960Z",
+      "durationMinutes": 60,
+      "ecoPoints": 60,
+      "capacity": 25,
+      "organizer": "Campus Sustainability Fleet Team",
+      "createdAt": "2026-10-15T12:46:59.960Z"
+    }
+  ],
+  "eventRegistrations": [
+    {
+      "id": "reg-1",
+      "eventId": "evt-01",
+      "userId": "usr-stu-01",
+      "attended": false,
+      "pointsClaimed": false,
+      "registeredAt": "2026-10-18T12:46:59.960Z"
+    },
+    {
+      "id": "reg-2",
+      "eventId": "evt-01",
+      "userId": "usr-stu-02",
+      "attended": false,
+      "pointsClaimed": false,
+      "registeredAt": "2026-10-17T12:46:59.960Z"
+    },
+    {
+      "id": "reg-3",
+      "eventId": "evt-02",
+      "userId": "usr-stu-01",
+      "attended": false,
+      "pointsClaimed": false,
+      "registeredAt": "2026-10-19T12:46:59.960Z"
+    }
+  ],
+  "rewards": [
+    {
+      "id": "rwd-01",
+      "title": "15% Off Organic Campus Cafe",
+      "description": "Valid for all organic smoothies, plant-based meals, and artisan fair-trade coffee.",
+      "category": "DINING",
+      "pointsCost": 150,
+      "stock": 45,
+      "codePrefix": "CAFE-ECO",
+      "isActive": true,
+      "createdAt": "2026-08-21T12:46:59.960Z"
+    },
+    {
+      "id": "rwd-02",
+      "title": "$10 Campus Bookstore Eco-Voucher",
+      "description": "Apply toward recycled notebooks, sustainable stationery, or course textbooks.",
+      "category": "VOUCHER",
+      "pointsCost": 250,
+      "stock": 30,
+      "codePrefix": "BOOK-GREEN",
+      "isActive": true,
+      "createdAt": "2026-08-21T12:46:59.960Z"
+    },
+    {
+      "id": "rwd-03",
+      "title": "1-Month Campus Electric Bike Pass",
+      "description": "Unlimited 30-minute rides on the green campus e-bike share network.",
+      "category": "COMMUTE",
+      "pointsCost": 400,
+      "stock": 15,
+      "codePrefix": "BIKE-PASS",
+      "isActive": true,
+      "createdAt": "2026-08-21T12:46:59.960Z"
+    },
+    {
+      "id": "rwd-04",
+      "title": "Solar Portable Charger 10,000mAh",
+      "description": "Rugged waterproof dual-panel solar power bank with USB-C PD fast charge.",
+      "category": "TECH",
+      "pointsCost": 600,
+      "stock": 8,
+      "codePrefix": "SOLAR-BANK",
+      "isActive": true,
+      "createdAt": "2026-08-21T12:46:59.960Z"
+    },
+    {
+      "id": "rwd-05",
+      "title": "Insulated Bamboo Hydroflask 750ml",
+      "description": "Double-walled vacuum insulated flask keeping beverages cold for 24 hours.",
+      "category": "MERCHANDISE",
+      "pointsCost": 350,
+      "stock": 20,
+      "codePrefix": "BAMBOO-BOT",
+      "isActive": true,
+      "createdAt": "2026-08-21T12:46:59.960Z"
+    }
+  ],
+  "rewardRedemptions": [
+    {
+      "id": "rdm-01",
+      "rewardId": "rwd-01",
+      "userId": "usr-stu-01",
+      "voucherCode": "CAFE-ECO-94KF2",
+      "pointsSpent": 150,
+      "redeemedAt": "2026-10-17T12:46:59.960Z",
+      "expiresAt": "2026-11-16T12:46:59.960Z",
+      "isUsed": false
+    }
+  ],
+  "ecoPointLogs": [
+    {
+      "id": "epl-1",
+      "userId": "usr-stu-01",
+      "points": 100,
+      "reason": "Welcome Eco-Member Grant",
+      "createdAt": "2026-09-20T12:46:59.960Z"
+    },
+    {
+      "id": "epl-2",
+      "userId": "usr-stu-01",
+      "points": 120,
+      "reason": "Completed Zero-Waste Dining Week",
+      "createdAt": "2026-10-05T12:46:59.960Z"
+    },
+    {
+      "id": "epl-3",
+      "userId": "usr-stu-01",
+      "points": 50,
+      "reason": "Submitted verified report: Quad Tree Planting",
+      "createdAt": "2026-10-15T12:46:59.960Z"
+    },
+    {
+      "id": "epl-4",
+      "userId": "usr-stu-01",
+      "points": -150,
+      "reason": "Redeemed voucher: 15% Off Organic Campus Cafe",
+      "createdAt": "2026-10-17T12:46:59.960Z"
+    },
+    {
+      "id": "epl-5",
+      "userId": "usr-stu-01",
+      "points": 20,
+      "reason": "Submitted report: Chilled Water Pipe Micro-Leak",
+      "createdAt": "2026-10-19T12:46:59.960Z"
+    }
+  ],
+  "greenQuests": [
+    {
+      "id": "qst-01",
+      "title": "Campus Zero-Waste Week",
+      "description": "Divert all single-use plastics and log your compostable dining waste at smart bins.",
+      "category": "Waste Reduction",
+      "rewardEcoPoints": 120,
+      "co2ReductionEstKg": 8.5,
+      "createdAt": "2026-09-20T12:46:59.960Z"
+    },
+    {
+      "id": "qst-02",
+      "title": "Dorm Energy Blackout Hour",
+      "description": "Power down non-essential lighting and desktop monitors between 8 PM - 9 PM on Thursdays.",
+      "category": "Energy Saving",
+      "rewardEcoPoints": 75,
+      "co2ReductionEstKg": 4.2,
+      "createdAt": "2026-09-20T12:46:59.960Z"
+    },
+    {
+      "id": "qst-03",
+      "title": "Sustainable Transit Streak",
+      "description": "Walk, bike, or use the campus zero-emission shuttle 5 consecutive school days.",
+      "category": "Green Commute",
+      "rewardEcoPoints": 150,
+      "co2ReductionEstKg": 14,
+      "createdAt": "2026-09-20T12:46:59.960Z"
+    }
+  ],
+  "questCompletions": [
+    {
+      "id": "qc-01",
+      "questId": "qst-01",
+      "userId": "usr-stu-01",
+      "proofNotes": "Logged 5 compost bin weigh-ins at student union cafeteria.",
+      "status": "APPROVED",
+      "awardedPoints": 120,
+      "completedAt": "2026-10-05T12:46:59.960Z"
+    },
+    {
+      "id": "qc-02",
+      "questId": "qst-02",
+      "userId": "usr-stu-01",
+      "proofNotes": "Participated in Dorm Cluster 3 energy blackout hour.",
+      "status": "APPROVED",
+      "awardedPoints": 75,
+      "completedAt": "2026-10-12T12:46:59.960Z"
+    }
+  ],
+  "anomalyAlerts": [
+    {
+      "id": "alt-101",
+      "severity": "HIGH",
+      "anomalyType": "NIGHTTIME_LEAK",
+      "buildingName": "Solar Science & Tech Complex",
+      "buildingId": "bld-01",
+      "title": "Acoustic Water Leak Detected in Chilled Water Loop",
+      "description": "Acoustic sensor telemetry registered 12.4 L/min continuous flow during closed campus hours (2:00 AM - 5:00 AM).",
+      "detectedAt": "2026-10-19T12:46:59.960Z",
+      "isResolved": false,
+      "diagnosticDetails": "Frequency spectrum 2.4 kHz indicates micro-fissure near Basement Pump 3 valve joint."
+    },
+    {
+      "id": "alt-102",
+      "severity": "WARNING",
+      "anomalyType": "SURGE_CONSUMPTION",
+      "buildingName": "Verdant Academic Quad",
+      "buildingId": "bld-02",
+      "title": "Phantom Baseline Power Draw Surge",
+      "description": "Nighttime baseline electricity draw is +38% higher than historical averages.",
+      "detectedAt": "2026-10-18T12:46:59.960Z",
+      "isResolved": false,
+      "diagnosticDetails": "Classroom 301-308 spotlight circuits remained on high brightness override."
+    }
+  ],
+  "aiInsights": [
+    {
+      "id": "ai-01",
+      "targetType": "CAMPUS_WIDE",
+      "title": "Solar Peak Load Shifting Opportunity",
+      "insightSummary": "Campus rooftop solar arrays generate 420 kW excess between 12:00 PM and 2:30 PM.",
+      "suggestedAction": "Pre-cool lecture halls in Science Complex and charge electric shuttle fleet during solar surplus.",
+      "confidenceScore": 0.94,
+      "projectedSavingsKwh": 3400,
+      "projectedSavingsUsd": 480,
+      "projectedCarbonReductionKg": 1850,
+      "status": "NEW",
+      "createdAt": "2026-10-19T12:46:59.960Z"
+    },
+    {
+      "id": "ai-02",
+      "targetType": "BUILDING",
+      "title": "Nighttime Base-load Phantom Power Surge",
+      "insightSummary": "Verdant Academic Quad exhibits 38% higher baseline power draw between 1:00 AM and 4:00 AM compared to historical averages.",
+      "suggestedAction": "Trigger automated deep-sleep script for 8 computer labs and dispatch night facility audit.",
+      "confidenceScore": 0.89,
+      "projectedSavingsKwh": 1250,
+      "projectedSavingsUsd": 195,
+      "projectedCarbonReductionKg": 620,
+      "status": "NEW",
+      "createdAt": "2026-10-18T12:46:59.960Z"
+    }
+  ],
+  "departments": [
+    {
+      "id": "dept-01",
+      "code": "DEPT-RE-01",
+      "name": "Dept of Renewable Energy & Smart Grid Systems",
+      "headName": "Prof. Marcus Thorne",
+      "studentCount": 142,
+      "facultyCount": 12,
+      "annualEnergyBudgetCapKw": 35,
+      "currentPowerDrawKw": 28.4,
+      "carbonOffsetTonnes": 42.5,
+      "esgRating": "LEED A+",
+      "status": "OPTIMAL",
+      "createdAt": "2026-04-23T12:46:59.960Z"
+    },
+    {
+      "id": "dept-02",
+      "code": "DEPT-ENV-02",
+      "name": "Dept of Environmental & Civil Engineering",
+      "headName": "Dr. Sarah Jenkins",
+      "studentCount": 210,
+      "facultyCount": 18,
+      "annualEnergyBudgetCapKw": 45,
+      "currentPowerDrawKw": 34.2,
+      "carbonOffsetTonnes": 38,
+      "esgRating": "LEED Gold",
+      "status": "OPTIMAL",
+      "createdAt": "2026-04-23T12:46:59.960Z"
+    },
+    {
+      "id": "dept-03",
+      "code": "DEPT-CS-03",
+      "name": "School of Computer Science & AI Institute",
+      "headName": "Dr. Alan Turing",
+      "studentCount": 380,
+      "facultyCount": 28,
+      "annualEnergyBudgetCapKw": 65,
+      "currentPowerDrawKw": 58.6,
+      "carbonOffsetTonnes": 28.4,
+      "esgRating": "EnergyStar 92",
+      "status": "ATTENTION_NEEDED",
+      "createdAt": "2026-04-23T12:46:59.960Z"
+    },
+    {
+      "id": "dept-04",
+      "code": "DEPT-BIO-04",
+      "name": "School of Biological & Microbial Sciences",
+      "headName": "Dr. Rosalind Franklin",
+      "studentCount": 185,
+      "facultyCount": 15,
+      "annualEnergyBudgetCapKw": 40,
+      "currentPowerDrawKw": 31.8,
+      "carbonOffsetTonnes": 32.1,
+      "esgRating": "LEED Platinum",
+      "status": "OPTIMAL",
+      "createdAt": "2026-04-23T12:46:59.960Z"
+    }
+  ],
+  "carbonCalculations": [
+    {
+      "id": "calc-prev-1",
+      "userId": "usr-stu-01",
+      "commuteMode": "BICYCLE",
+      "commuteKmPerWeek": 35,
+      "dietType": "VEGETARIAN",
+      "dormElectricityHours": 6,
+      "recyclingRate": 85,
+      "totalAnnualKgCo2": 1820.5,
+      "transportKg": 72.8,
+      "dietKg": 1400,
+      "energyKg": 310.2,
+      "wasteKg": 37.5,
+      "aiTip": "Outstanding zero-emission bike commute! Switching dorm desk lights to Smart LED schedule could reduce your annual footprint by another 60 kg CO2.",
+      "createdAt": "2026-10-06T12:46:59.960Z"
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "aud-1",
+      "userId": "usr-admin-01",
+      "action": "SYSTEM_INITIALIZED",
+      "entityType": "System",
+      "entityId": "greencampus-core",
+      "metadata": "{\"version\":\"1.0.0\",\"mode\":\"Pre-Backend Persistent Storage\"}",
+      "createdAt": "2026-08-21T12:46:59.960Z"
+    }
+  ]
+}

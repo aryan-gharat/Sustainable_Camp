@@ -1,50 +1,28 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import prebackend from "@/lib/prebackend";
 
 export async function GET() {
   try {
     const session = await getSession();
+    const stats = prebackend.getCampusStats();
+    const rawDb = prebackend.getRawDb();
 
-    let totalUsers = 48;
-    let totalBuildings = 12;
-    let totalDepartments = 8;
-    let totalCarbonSavedTonnes = 142.8;
-    let pendingReportApprovals = 5;
-    let activeIoTMeters = 34;
+    // Map recent logs from audit logs or dynamic activities
+    const recentSystemLogs = rawDb.auditLogs.slice(0, 5).map((log, idx) => {
+      const user = rawDb.users.find((u) => u.id === log.userId);
+      return {
+        id: log.id,
+        action: log.action,
+        details: log.metadata || `${log.action} executed on ${log.entityType}`,
+        user: user ? `${user.name} (${user.role})` : "Campus Administrator",
+        time: "Recently",
+      };
+    });
 
-    try {
-      const dbUsersCount = await prisma.user.count();
-      if (dbUsersCount > 0) totalUsers = dbUsersCount;
-
-      const dbBuildingsCount = await prisma.building.count();
-      if (dbBuildingsCount > 0) totalBuildings = dbBuildingsCount;
-
-      const dbReportsCount = await prisma.studentReport.count({
-        where: { status: "PENDING" },
-      });
-      pendingReportApprovals = dbReportsCount;
-
-      const dbMetersCount = await prisma.utilityMeter.count({
-        where: { status: "ACTIVE" },
-      });
-      if (dbMetersCount > 0) activeIoTMeters = dbMetersCount;
-    } catch (err) {
-      console.warn("DB fallback for admin dashboard API:", err);
-    }
-
-    return NextResponse.json({
-      success: true,
-      stats: {
-        totalUsers,
-        totalBuildings,
-        totalDepartments,
-        totalCarbonSavedTonnes,
-        pendingReportApprovals,
-        activeIoTMeters,
-        systemHealth: "OPTIMAL_100%",
-      },
-      recentSystemLogs: [
+    if (recentSystemLogs.length === 0) {
+      recentSystemLogs.push(
         {
           id: "log-1",
           action: "ROLE_UPDATED",
@@ -65,8 +43,23 @@ export async function GET() {
           details: "Auto-dispatched high-priority acoustic water leak repair WO-2026-081",
           user: "Campus AI System",
           time: "3 hours ago",
-        },
-      ],
+        }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      stats: {
+        totalUsers: stats.totalUsers,
+        totalBuildings: stats.totalBuildings,
+        totalDepartments: stats.totalDepartments,
+        totalCarbonSavedTonnes: stats.totalCarbonSavedTonnes,
+        pendingReportApprovals: stats.pendingReportApprovals,
+        activeIoTMeters: stats.activeIoTMeters,
+        activeWorkOrders: stats.activeWorkOrders,
+        systemHealth: "OPTIMAL_100%",
+      },
+      recentSystemLogs,
     });
   } catch (error) {
     console.error("Admin dashboard API error:", error);

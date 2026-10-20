@@ -31,7 +31,7 @@ import {
   Recycle,
   Leaf,
   Trophy,
-  Sparkles,
+  Loader2,
   TrendingDown,
   TrendingUp,
   BarChart3,
@@ -66,8 +66,8 @@ export function SustainabilityAnalyticsDashboard() {
   if (!mounted || loading) {
     return (
       <div className="p-12 text-center text-slate-400 text-xs flex flex-col items-center gap-2">
-        <Sparkles className="h-6 w-6 text-emerald-400 animate-spin" />
-        <span>Loading Recharts Interactive Sustainability Telemetry...</span>
+        <Loader2 className="h-5 w-5 text-emerald-500 animate-spin" />
+        <span>Loading operational telemetry data...</span>
       </div>
     );
   }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyJWT, AUTH_COOKIE_NAME } from "@/lib/jwt";
 import prisma from "@/lib/prisma";
 import { Role } from "@/types/auth";
+import prebackend from "@/lib/prebackend";
 
 export async function GET(request: NextRequest) {
   try {
@@ -16,7 +17,29 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ authenticated: false, user: null }, { status: 200 });
     }
 
-    // Try to enrich from database
+    // 1. Enrich from Pre-Backend Store
+    const storedUser =
+      prebackend.getUserById(payload.userId) ||
+      prebackend.getUserByEmail(payload.email);
+
+    if (storedUser) {
+      return NextResponse.json({
+        authenticated: true,
+        user: {
+          id: storedUser.id,
+          email: storedUser.email,
+          name: storedUser.name,
+          role: storedUser.role,
+          department: storedUser.department,
+          avatarUrl: storedUser.avatarUrl,
+          ecoPoints: storedUser.profile?.totalEcoPoints ?? (payload.role === "STUDENT" ? 580 : 120),
+          carbonSaved: storedUser.profile?.carbonSavedKg ?? 42.5,
+          streakDays: storedUser.profile?.streakDays ?? 1,
+        },
+      });
+    }
+
+    // 2. Fallback to Prisma if available
     try {
       const dbUser = await prisma.user.findUnique({
         where: { id: payload.userId },
@@ -52,9 +75,10 @@ export async function GET(request: NextRequest) {
         });
       }
     } catch {
-      // Return JWT payload if DB is offline or mock user
+      // Prisma offline
     }
 
+    // Default payload fallback
     return NextResponse.json({
       authenticated: true,
       user: {
@@ -64,7 +88,7 @@ export async function GET(request: NextRequest) {
         role: payload.role as Role,
         department: payload.department || null,
         avatarUrl: null,
-        ecoPoints: payload.role === "STUDENT" ? 340 : 120,
+        ecoPoints: payload.role === "STUDENT" ? 580 : 120,
         carbonSaved: 42.5,
       },
     });

@@ -10,7 +10,9 @@
     "prisma:generate": "prisma generate",
     "prisma:push": "prisma db push",
     "prisma:studio": "prisma studio",
-    "prisma:seed": "node prisma/seed.js"
+    "prisma:seed": "node prisma/seed.js",
+    "prebackend:seed": "node scripts/init-db.js",
+    "prebackend:reset": "node scripts/init-db.js"
   },
   "dependencies": {
     "@prisma/client": "^6.4.1",

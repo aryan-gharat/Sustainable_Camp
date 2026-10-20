@@ -10,7 +10,6 @@ import {
   LayoutDashboard,
   BarChart3,
   Building2,
-  Sparkles,
   Users,
   Settings,
   Trophy,
@@ -48,7 +47,6 @@ const ICON_COMPONENTS: Record<string, LucideIcon> = {
   LayoutDashboard,
   BarChart3,
   Building2,
-  Sparkles,
   Users,
   Settings,
   Trophy,
@@ -88,36 +86,36 @@ export function Sidebar({ role, userName, userEmail }: SidebarProps) {
   };
 
   return (
-    <aside className="w-64 shrink-0 border-r border-slate-800/80 bg-slate-950/70 backdrop-blur-xl flex flex-col min-h-screen">
+    <aside className="w-64 shrink-0 border-r border-slate-800 bg-[#0A0E17] flex flex-col min-h-screen">
       {/* Brand Header */}
-      <div className="p-5 border-b border-slate-800/80">
+      <div className="p-4 border-b border-slate-800">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 text-white shadow-lg shadow-emerald-600/30 group-hover:scale-105 transition duration-300">
-            <Leaf className="h-5 w-5 fill-current" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-600 text-white border border-emerald-500/30">
+            <Leaf className="h-4 w-4 fill-current" />
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="text-base font-bold tracking-tight text-white">
+              <span className="text-sm font-bold tracking-tight text-slate-100">
                 GreenCampus
               </span>
-              <span className="rounded bg-emerald-500/20 px-1 py-0.2 text-[10px] font-extrabold uppercase text-emerald-400 border border-emerald-500/30">
-                AI
+              <span className="rounded bg-slate-800 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-slate-300 border border-slate-700">
+                BMS
               </span>
             </div>
-            <p className="text-[11px] text-slate-400">Sustainable OS</p>
+            <p className="text-[10px] text-slate-400">Facilities & Energy Systems</p>
           </div>
         </Link>
 
         {/* Current Active Role Badge */}
-        <div className="mt-4">
-          <RoleBadge role={role} size="md" className="w-full justify-center" />
+        <div className="mt-3">
+          <RoleBadge role={role} size="sm" className="w-full justify-center" />
         </div>
       </div>
 
       {/* Navigation Links */}
-      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-        <div className="px-3 pb-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-          Role Workspaces
+      <div className="flex-1 overflow-y-auto px-2.5 py-3 space-y-1">
+        <div className="px-2.5 pb-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+          Operational Workspace
         </div>
 
         {navItems.map((item) => {
@@ -130,13 +128,13 @@ export function Sidebar({ role, userName, userEmail }: SidebarProps) {
               key={item.href}
               href={item.href}
               className={cn(
-                "group flex items-center justify-between rounded-lg px-3 py-2.5 text-xs font-medium transition-all duration-200",
+                "group flex items-center justify-between px-3 py-2 text-xs transition duration-150 rounded-md",
                 isActive
-                  ? "bg-emerald-500/15 text-white border border-emerald-500/30 shadow-sm shadow-emerald-500/10"
+                  ? "bg-slate-800/90 text-white font-medium border-l-2 border-emerald-500 rounded-l-none"
                   : "text-slate-400 hover:bg-slate-900 hover:text-slate-200"
               )}
             >
-              <div className="flex items-center gap-3 min-w-0">
+              <div className="flex items-center gap-2.5 min-w-0">
                 <Icon
                   className={cn(
                     "h-4 w-4 shrink-0 transition-colors",
@@ -153,9 +151,9 @@ export function Sidebar({ role, userName, userEmail }: SidebarProps) {
                   className={cn(
                     "ml-2 shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold",
                     item.badgeVariant === "destructive"
-                      ? "bg-rose-500/20 text-rose-300 border border-rose-500/30"
+                      ? "bg-rose-950/60 text-rose-300 border border-rose-800/50"
                       : item.badgeVariant === "eco"
-                      ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                      ? "bg-emerald-950/60 text-emerald-300 border border-emerald-800/50"
                       : "bg-slate-800 text-slate-300 border border-slate-700"
                   )}
                 >
@@ -168,32 +166,32 @@ export function Sidebar({ role, userName, userEmail }: SidebarProps) {
       </div>
 
       {/* User Session Footer & Logout */}
-      <div className="border-t border-slate-800/80 p-3 bg-slate-950/40">
-        <div className="flex items-center justify-between rounded-lg bg-slate-900/60 p-2.5 border border-slate-800">
+      <div className="border-t border-slate-800 p-3 bg-[#0C1220]">
+        <div className="flex items-center justify-between rounded-md bg-[#0F1626] p-2 border border-slate-800">
           <div className="min-w-0 flex-1 mr-2">
-            <p className="truncate text-xs font-semibold text-white">
+            <p className="truncate text-xs font-medium text-slate-200">
               {userName || "Active Operator"}
             </p>
             <p className="truncate text-[10px] text-slate-400">
-              {userEmail || "campus.greencampus.ai"}
+              {userEmail || "facilities@greencampus.edu"}
             </p>
           </div>
 
           <button
             onClick={handleLogout}
             title="Log Out"
-            className="rounded-md p-1.5 text-slate-400 hover:bg-slate-800 hover:text-rose-400 transition"
+            className="rounded p-1 text-slate-400 hover:bg-slate-800 hover:text-rose-400 transition"
           >
             <LogOut className="h-4 w-4" />
           </button>
         </div>
 
-        <div className="mt-2.5 flex items-center justify-between px-1 text-[10px] text-slate-400">
+        <div className="mt-2 flex items-center justify-between px-1 text-[10px] text-slate-400">
           <span className="flex items-center gap-1">
             <ShieldCheck className="h-3 w-3 text-emerald-500" />
-            RBAC Guard Active
+            RBAC Authenticated
           </span>
-          <span>v1.0.0</span>
+          <span>v2.4</span>
         </div>
       </div>
     </aside>

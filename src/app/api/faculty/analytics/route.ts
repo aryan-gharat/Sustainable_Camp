@@ -1,81 +1,27 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
-import prisma from "@/lib/prisma";
+import prebackend from "@/lib/prebackend";
 
 export async function GET() {
   try {
     const session = await getSession();
+    const meters = prebackend.getAllMeters();
 
-    let labRooms: any[] = [];
-    let departmentTelemetry: any = null;
+    const labRooms = meters.slice(0, 4).map((m, idx) => {
+      const topReading = m.readings && m.readings.length > 0 ? m.readings[0] : null;
+      return {
+        id: m.id,
+        name: `${m.building.name} - ${m.locationDescription}`,
+        meterSerial: m.meterSerial,
+        currentPowerKw: topReading?.value || 12.4 + idx * 3.2,
+        status: m.status,
+        carbonEquivalentKg: topReading?.carbonEquivalentKg || 5.2 + idx * 1.5,
+        occupancyCount: 15 + idx * 8,
+        hvacMode: "ECO_DYNAMIC_22C",
+      };
+    });
 
-    try {
-      // Query buildings or smart meters if present
-      const meters = await prisma.utilityMeter.findMany({
-        take: 5,
-        include: { building: true, readings: { take: 1, orderBy: { timestamp: "desc" } } },
-      });
-
-      if (meters.length > 0) {
-        labRooms = meters.map((m) => ({
-          id: m.id,
-          name: `${m.building.name} - ${m.locationDescription}`,
-          meterSerial: m.meterSerial,
-          currentPowerKw: m.readings[0]?.value || 12.4,
-          status: m.status,
-          carbonEquivalentKg: m.readings[0]?.carbonEquivalentKg || 5.2,
-        }));
-      }
-    } catch (err) {
-      console.warn("DB fallback for faculty analytics API:", err);
-    }
-
-    if (labRooms.length === 0) {
-      labRooms = [
-        {
-          id: "lab-101",
-          name: "Solar & Smart Grid Lab (Room 301)",
-          meterSerial: "MTR-SCI-01-ELEC",
-          currentPowerKw: 14.2,
-          status: "ACTIVE",
-          carbonEquivalentKg: 6.4,
-          occupancyCount: 28,
-          hvacMode: "ECO_DYNAMIC_22C",
-        },
-        {
-          id: "lab-102",
-          name: "Renewable Circuits & Microgrid (Room 304)",
-          meterSerial: "MTR-SCI-02-ELEC",
-          currentPowerKw: 8.6,
-          status: "ACTIVE",
-          carbonEquivalentKg: 3.8,
-          occupancyCount: 18,
-          hvacMode: "ECO_DYNAMIC_22C",
-        },
-        {
-          id: "lab-103",
-          name: "High-Performance Computing Cluster (Basement B)",
-          meterSerial: "MTR-HPC-01-ELEC",
-          currentPowerKw: 24.8,
-          status: "ACTIVE",
-          carbonEquivalentKg: 11.2,
-          occupancyCount: 4,
-          hvacMode: "LIQUID_CHILLED_18C",
-        },
-        {
-          id: "lab-104",
-          name: "Environmental Microbiology Lab (Room 210)",
-          meterSerial: "MTR-BIO-01-ELEC",
-          currentPowerKw: 5.1,
-          status: "STANDBY",
-          carbonEquivalentKg: 2.3,
-          occupancyCount: 0,
-          hvacMode: "NIGHT_DEEP_SLEEP",
-        },
-      ];
-    }
-
-    departmentTelemetry = {
+    const departmentTelemetry = {
       departmentName: "Dept of Renewable Energy & Smart Grid Systems",
       totalPowerKw: 52.7,
       solarGenerationOffsetKw: 38.4,

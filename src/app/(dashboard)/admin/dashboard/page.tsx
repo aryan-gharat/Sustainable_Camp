@@ -14,7 +14,6 @@ import {
   FileCheck,
   ShieldCheck,
   ArrowRight,
-  Sparkles,
   Zap,
   Leaf,
   Activity,
@@ -62,13 +61,13 @@ export default function AdminDashboardPage() {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <RoleBadge role="ADMIN" size="sm" />
-            <span className="text-xs text-purple-400 font-semibold bg-purple-950/60 px-2 py-0.5 rounded-full border border-purple-500/30">
+            <span className="text-[11px] text-slate-300 font-medium bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
               Campus Executive Governance
             </span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white flex items-center gap-2">
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-100 flex items-center gap-2">
             Institutional Sustainability Operations
-            <ShieldCheck className="h-6 w-6 text-purple-400" />
+            <ShieldCheck className="h-5 w-5 text-emerald-400" />
           </h2>
           <p className="text-xs sm:text-sm text-slate-400 mt-1">
             Manage users & RBAC, department energy budgets, facility infrastructure & report approvals
@@ -129,7 +128,7 @@ export default function AdminDashboardPage() {
           unit="Tonnes"
           change="-24.8% Baseline"
           changeType="positive"
-          iconName="sparkles"
+          iconName="leaf"
           category="energy"
           description="Net-Zero Target 2030"
         />

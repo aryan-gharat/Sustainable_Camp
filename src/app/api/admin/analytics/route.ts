@@ -1,24 +1,31 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
-import prisma from "@/lib/prisma";
+import prebackend from "@/lib/prebackend";
 
 export async function GET() {
   try {
     const session = await getSession();
+    const buildings = prebackend.getAllBuildings();
+    const stats = prebackend.getCampusStats();
 
-    let campusAnalytics = {
+    const buildingPerformanceRankings = buildings.map((b) => {
+      const elecMeter = b.meters.find((m) => m.meterType === "ELECTRICITY");
+      return {
+        name: b.name,
+        rating: b.currentEnergyRating,
+        powerKw: elecMeter ? 28.4 : 18.2,
+        offsetTonnes: b.solarPanelsInstalled ? 45.2 : 18.0,
+      };
+    });
+
+    const campusAnalytics = {
       totalCampusPowerDrawKw: 184.2,
       totalRooftopSolarGenerationKw: 420.0,
       netCleanEnergyRatioPercent: 68.4,
-      totalAnnualCarbonFootprintTonnes: 142.8,
+      totalAnnualCarbonFootprintTonnes: stats.totalCarbonSavedTonnes,
       totalWaterConservedLiters: 125000,
       landfillDiversionRatePercent: 86.2,
-      buildingPerformanceRankings: [
-        { name: "Solar Science & Tech Complex", rating: "LEED Platinum", powerKw: 28.4, offsetTonnes: 45.2 },
-        { name: "EcoLiving Dormitory Cluster", rating: "Net-Zero Ready", powerKw: 18.2, offsetTonnes: 38.0 },
-        { name: "Verdant Academic Quad", rating: "LEED Gold", powerKw: 42.6, offsetTonnes: 28.5 },
-        { name: "Central Memorial Library", rating: "EnergyStar 88", powerKw: 38.0, offsetTonnes: 18.2 },
-      ],
+      buildingPerformanceRankings,
       hourlyTelemetry: [
         { hour: "00:00", gridKw: 95, solarKw: 0 },
         { hour: "04:00", gridKw: 80, solarKw: 0 },

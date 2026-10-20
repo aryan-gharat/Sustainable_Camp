@@ -11,7 +11,7 @@ import {
   Wrench,
   Check,
   ChevronDown,
-  Sparkles,
+  UserCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -94,13 +94,13 @@ export function QuickRoleSwitcher({ currentRole }: QuickRoleSwitcherProps) {
         onClick={() => setIsOpen(!isOpen)}
         disabled={isSwitching}
         className={cn(
-          "flex items-center gap-2 rounded-lg border border-slate-700/80 bg-slate-900/90 px-3 py-1.5 text-xs font-medium text-slate-200 shadow-sm transition hover:bg-slate-800 hover:border-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/40",
+          "flex items-center gap-2 rounded-md border border-slate-800 bg-[#0F1626] px-3 py-1.5 text-xs font-medium text-slate-200 transition hover:bg-slate-800 hover:border-slate-700 focus:outline-none",
           isSwitching && "opacity-70 cursor-wait"
         )}
       >
-        <Sparkles className="h-3.5 w-3.5 text-emerald-400 animate-pulse" />
-        <span className="hidden sm:inline text-slate-400">Viewing as:</span>
-        <span className="font-semibold text-white">
+        <UserCheck className="h-3.5 w-3.5 text-emerald-500" />
+        <span className="hidden sm:inline text-slate-400">Profile:</span>
+        <span className="font-semibold text-slate-100">
           {currentRoleInfo?.displayName || currentRole}
         </span>
         <ChevronDown className="h-3 w-3 text-slate-400 ml-0.5" />
@@ -112,17 +112,17 @@ export function QuickRoleSwitcher({ currentRole }: QuickRoleSwitcherProps) {
             className="fixed inset-0 z-40"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute right-0 z-50 mt-2 w-72 origin-top-right rounded-xl border border-slate-700/80 bg-slate-900/95 p-2 shadow-2xl backdrop-blur-xl ring-1 ring-black/50">
+          <div className="absolute right-0 z-50 mt-1.5 w-72 origin-top-right rounded-lg border border-slate-700 bg-[#0F1626] p-2 shadow-xl ring-1 ring-black/40">
             <div className="px-3 py-2 border-b border-slate-800">
-              <p className="text-xs font-semibold text-white">
-                Role-Based Access Control Switcher
+              <p className="text-xs font-semibold text-slate-100">
+                Switch Operational Profile
               </p>
               <p className="text-[11px] text-slate-400 mt-0.5">
-                Instant test simulation across all 4 authorized roles
+                Review permissions across authorized roles
               </p>
             </div>
 
-            <div className="py-1">
+            <div className="py-1 space-y-0.5">
               {ROLES_LIST.map((item) => {
                 const isSelected = item.role === currentRole;
                 const Icon = item.icon;
@@ -133,25 +133,25 @@ export function QuickRoleSwitcher({ currentRole }: QuickRoleSwitcherProps) {
                     onClick={() => handleSwitchRole(item.role, item.email)}
                     disabled={isSwitching}
                     className={cn(
-                      "flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs transition",
+                      "flex w-full items-center justify-between rounded-md px-2.5 py-2 text-left text-xs transition",
                       isSelected
-                        ? "bg-emerald-950/40 text-emerald-300 font-semibold border border-emerald-500/30"
-                        : "text-slate-300 hover:bg-slate-800/80 hover:text-white"
+                        ? "bg-slate-800 text-slate-100 font-medium border border-slate-700"
+                        : "text-slate-300 hover:bg-slate-800/70 hover:text-white"
                     )}
                   >
                     <div className="flex items-center gap-2.5">
                       <div
                         className={cn(
-                          "flex h-7 w-7 items-center justify-center rounded-md border",
+                          "flex h-7 w-7 items-center justify-center rounded border",
                           isSelected
-                            ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-300"
-                            : "bg-slate-800 border-slate-700 text-slate-400"
+                            ? "bg-emerald-950/60 border-emerald-700/60 text-emerald-400"
+                            : "bg-slate-800/80 border-slate-700 text-slate-400"
                         )}
                       >
                         <Icon className="h-3.5 w-3.5" />
                       </div>
                       <div>
-                        <div className="text-xs">{item.name}</div>
+                        <div className="text-xs font-medium text-slate-200">{item.name}</div>
                         <div className="text-[10px] text-slate-400">
                           {item.role}
                         </div>
@@ -166,8 +166,8 @@ export function QuickRoleSwitcher({ currentRole }: QuickRoleSwitcherProps) {
               })}
             </div>
 
-            <div className="mt-1 border-t border-slate-800 pt-2 px-3 pb-1 text-[11px] text-slate-400">
-              Passes through Next.js 15 JWT auth cookies & middleware
+            <div className="mt-1 border-t border-slate-800 pt-2 px-3 pb-1 text-[10px] text-slate-400">
+              Authenticated via HTTP-only JWT sessions
             </div>
           </div>
         </>

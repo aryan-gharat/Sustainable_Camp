@@ -14,7 +14,7 @@ import {
   Zap,
   Trash2,
   TreePine,
-  Sparkles,
+  ClipboardCheck,
   Filter,
   Send,
 } from "lucide-react";
@@ -225,14 +225,14 @@ export default function FacultyReportsReviewPage() {
 
       {/* Review Modal */}
       {selectedReport && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="w-full max-w-lg glass-card border border-amber-500/40 rounded-2xl p-6 space-y-4 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4">
+          <div className="w-full max-w-lg bg-[#0F1626] border border-slate-700 rounded-xl p-6 space-y-4 shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-amber-400" />
+              <h3 className="text-sm font-semibold text-slate-100 flex items-center gap-2">
+                <ClipboardCheck className="h-4 w-4 text-emerald-400" />
                 Review & Verify Sustainability Report
               </h3>
-              <button onClick={() => setSelectedReport(null)} className="text-slate-400 hover:text-white text-lg font-bold">
+              <button onClick={() => setSelectedReport(null)} className="text-slate-400 hover:text-white text-sm font-bold">
                 ✕
               </button>
             </div>

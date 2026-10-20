@@ -149,12 +149,22 @@ The PostgreSQL database schema in `prisma/schema.prisma` models complete smart c
 npm install
 ```
 
-### 3. Generate Prisma Client
+### 3. Pre-Backend Persistent Storage (Zero External DB Required)
+GreenCampus AI features a built-in **Self-Healing Pre-Backend Storage Engine** located at `data/greencampus-db.json`. 
+
+- **Instant Persistence:** Stores all users, profiles, buildings, meters, reports, work orders, events, and rewards directly to disk with real bcrypt password hashing.
+- **Zero Configuration:** Works immediately out of the box with `npm run dev`—no local PostgreSQL server or Docker setup needed!
+- **Dual-Mode:** Automatically synchronizes with PostgreSQL when connected, while guaranteeing 100% data persistence locally.
+
 ```bash
-npm run prisma:generate
+# Seed or reset the Pre-Backend persistent database anytime:
+npm run prebackend:seed
+
+# Reset database to fresh pristine state:
+npm run prebackend:reset
 ```
 
-### 4. Database Setup (When PostgreSQL is running)
+### 4. Optional PostgreSQL Setup (If PostgreSQL is installed)
 ```bash
 # Push schema to PostgreSQL
 npm run prisma:push

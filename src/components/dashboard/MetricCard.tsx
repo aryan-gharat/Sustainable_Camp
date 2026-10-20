@@ -3,7 +3,6 @@ import {
   Zap,
   Droplets,
   Trash2,
-  Sparkles,
   Trophy,
   Leaf,
   ArrowUpRight,
@@ -12,6 +11,7 @@ import {
   Users,
   ClipboardList,
   LucideIcon,
+  ShieldCheck,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -32,7 +32,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   zap: Zap,
   droplets: Droplets,
   trash: Trash2,
-  sparkles: Sparkles,
+  sparkles: Activity,
   trophy: Trophy,
   leaf: Leaf,
   activity: Activity,
@@ -56,27 +56,27 @@ export function MetricCard({
   const categoryStyles = {
     energy: {
       border: "hover:border-amber-500/40",
-      iconBg: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+      iconBg: "bg-amber-950/30 text-amber-400 border-amber-500/25",
       accent: "text-amber-400",
     },
     water: {
       border: "hover:border-sky-500/40",
-      iconBg: "bg-sky-500/10 text-sky-400 border-sky-500/20",
+      iconBg: "bg-sky-950/30 text-sky-400 border-sky-500/25",
       accent: "text-sky-400",
     },
     waste: {
       border: "hover:border-emerald-500/40",
-      iconBg: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+      iconBg: "bg-emerald-950/30 text-emerald-400 border-emerald-500/25",
       accent: "text-emerald-400",
     },
     ai: {
-      border: "hover:border-purple-500/40",
-      iconBg: "bg-purple-500/10 text-purple-400 border-purple-500/20",
-      accent: "text-purple-400",
+      border: "hover:border-slate-700",
+      iconBg: "bg-slate-800/80 text-slate-300 border-slate-700",
+      accent: "text-slate-300",
     },
     points: {
       border: "hover:border-teal-500/40",
-      iconBg: "bg-teal-500/10 text-teal-400 border-teal-500/20",
+      iconBg: "bg-teal-950/30 text-teal-400 border-teal-500/25",
       accent: "text-teal-400",
     },
   }[category];
@@ -84,19 +84,19 @@ export function MetricCard({
   return (
     <Card
       className={cn(
-        "glass-card relative overflow-hidden transition-all duration-300",
+        "pro-card transition-colors duration-150 border-slate-800 bg-[#0F1626]",
         categoryStyles.border,
         className
       )}
     >
       <CardContent className="p-5">
         <div className="flex items-center justify-between">
-          <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
             {title}
           </p>
           <div
             className={cn(
-              "flex h-9 w-9 items-center justify-center rounded-lg border",
+              "flex h-8 w-8 items-center justify-center rounded-md border",
               categoryStyles.iconBg
             )}
           >
@@ -105,7 +105,7 @@ export function MetricCard({
         </div>
 
         <div className="mt-3 flex items-baseline gap-2">
-          <span className="text-2xl font-bold tracking-tight text-white">
+          <span className="text-2xl font-bold tracking-tight text-slate-100 tabular-nums">
             {value}
           </span>
           {unit && (
@@ -114,11 +114,11 @@ export function MetricCard({
         </div>
 
         {(change || description) && (
-          <div className="mt-2 flex items-center gap-1.5 text-xs">
+          <div className="mt-2.5 flex items-center gap-1.5 text-xs border-t border-slate-800/80 pt-2">
             {change && (
               <span
                 className={cn(
-                  "inline-flex items-center font-medium",
+                  "inline-flex items-center font-medium text-[11px]",
                   changeType === "positive"
                     ? "text-emerald-400"
                     : changeType === "negative"
@@ -134,8 +134,11 @@ export function MetricCard({
                 {change}
               </span>
             )}
+            {change && description && (
+              <span className="text-slate-600">•</span>
+            )}
             {description && (
-              <span className="text-slate-400/90 truncate">{description}</span>
+              <span className="text-slate-400 text-[11px] truncate">{description}</span>
             )}
           </div>
         )}

@@ -12,7 +12,6 @@ import {
   Award,
   CheckCircle2,
   TreePine,
-  Sparkles,
   Filter,
   ArrowRight,
 } from "lucide-react";
@@ -212,7 +211,7 @@ export default function StudentEventsPage() {
                           disabled={processingId === evt.id}
                           className="w-full text-xs gap-1"
                         >
-                          <Sparkles className="h-3.5 w-3.5 text-amber-300" />
+                          <Award className="h-3.5 w-3.5 text-emerald-400" />
                           {processingId === evt.id ? "Processing..." : `Claim +${evt.ecoPoints} PTS for Attendance`}
                         </Button>
                       )

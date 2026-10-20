@@ -1,100 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession, hashPassword } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import prebackend from "@/lib/prebackend";
 
 export async function GET(request: NextRequest) {
   try {
     const session = await getSession();
     const { searchParams } = new URL(request.url);
-    const role = searchParams.get("role");
-    const search = searchParams.get("search");
+    const role = searchParams.get("role") || undefined;
+    const search = searchParams.get("search") || undefined;
 
-    let users: any[] = [];
-
-    try {
-      const whereClause: any = {};
-      if (role && role !== "ALL") whereClause.role = role;
-      if (search) {
-        whereClause.OR = [
-          { name: { contains: search, mode: "insensitive" } },
-          { email: { contains: search, mode: "insensitive" } },
-          { department: { contains: search, mode: "insensitive" } },
-        ];
-      }
-
-      const dbUsers = await prisma.user.findMany({
-        where: whereClause,
-        orderBy: { createdAt: "desc" },
-        include: { profile: true },
-      });
-
-      if (dbUsers.length > 0) {
-        users = dbUsers.map((u) => ({
-          id: u.id,
-          name: u.name,
-          email: u.email,
-          role: u.role,
-          department: u.department,
-          studentId: u.studentId,
-          staffId: u.staffId,
-          isActive: u.isActive,
-          ecoPoints: u.profile?.totalEcoPoints || 0,
-          createdAt: u.createdAt,
-        }));
-      }
-    } catch (err) {
-      console.warn("DB fallback for admin users GET:", err);
-    }
-
-    if (users.length === 0) {
-      users = [
-        {
-          id: "usr-admin-1",
-          name: "Dr. Elena Vance",
-          email: "admin@greencampus.ai",
-          role: "ADMIN",
-          department: "Sustainability Council",
-          staffId: "ADM-9021",
-          isActive: true,
-          ecoPoints: 1250,
-          createdAt: new Date(Date.now() - 86400000 * 60).toISOString(),
-        },
-        {
-          id: "usr-fac-1",
-          name: "Prof. Marcus Thorne",
-          email: "faculty@greencampus.ai",
-          role: "FACULTY",
-          department: "Dept of Renewable Energy & IoT",
-          staffId: "FAC-4402",
-          isActive: true,
-          ecoPoints: 890,
-          createdAt: new Date(Date.now() - 86400000 * 45).toISOString(),
-        },
-        {
-          id: "usr-stu-1",
-          name: "Aiden Sharma",
-          email: "student@greencampus.ai",
-          role: "STUDENT",
-          department: "Environmental Engineering '27",
-          studentId: "STU-88412",
-          isActive: true,
-          ecoPoints: 580,
-          createdAt: new Date(Date.now() - 86400000 * 30).toISOString(),
-        },
-        {
-          id: "usr-mnt-1",
-          name: "Carlos Mendez",
-          email: "maintenance@greencampus.ai",
-          role: "MAINTENANCE_STAFF",
-          department: "Campus Facilities Operations",
-          staffId: "MNT-1092",
-          isActive: true,
-          ecoPoints: 720,
-          createdAt: new Date(Date.now() - 86400000 * 20).toISOString(),
-        },
-      ];
-    }
-
+    const users = prebackend.getAllUsers({ role, search });
     return NextResponse.json({ success: true, users });
   } catch (error) {
     console.error("Admin users GET error:", error);
@@ -112,14 +28,35 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Name and email are required." }, { status: 400 });
     }
 
-    let newUser: any = null;
+    const normalizedEmail = email.toLowerCase().trim();
 
+    // Check if user already exists
+    const existing = prebackend.getUserByEmail(normalizedEmail);
+    if (existing) {
+      return NextResponse.json({ error: "An account with this email already exists." }, { status: 409 });
+    }
+
+    const passwordHash = await hashPassword(password);
+
+    // Save to prebackend store
+    const newUser = prebackend.createUser({
+      name,
+      email: normalizedEmail,
+      passwordHash,
+      role,
+      department: department || null,
+      studentId: studentId || null,
+      staffId: staffId || null,
+      initialEcoPoints: 100,
+    });
+
+    // Optional background sync with Prisma if online
     try {
-      const passwordHash = await hashPassword(password);
-      newUser = await prisma.user.create({
+      await prisma.user.create({
         data: {
+          id: newUser.id,
           name,
-          email,
+          email: normalizedEmail,
           passwordHash,
           role,
           department: department || null,
@@ -132,29 +69,23 @@ export async function POST(request: NextRequest) {
           },
         },
       });
-    } catch (err) {
-      console.warn("DB fallback for admin user POST:", err);
-    }
-
-    if (!newUser) {
-      newUser = {
-        id: `usr-${Date.now()}`,
-        name,
-        email,
-        role,
-        department: department || null,
-        studentId: studentId || null,
-        staffId: staffId || null,
-        isActive: true,
-        ecoPoints: 100,
-        createdAt: new Date().toISOString(),
-      };
+    } catch {
+      // Prisma offline
     }
 
     return NextResponse.json({
       success: true,
-      message: `User '${name}' created successfully with role ${role}!`,
-      user: newUser,
+      message: `User '${name}' created and saved in campus directory with role ${role}!`,
+      user: {
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.role,
+        department: newUser.department,
+        ecoPoints: newUser.profile.totalEcoPoints,
+        isActive: newUser.isActive,
+        createdAt: newUser.createdAt,
+      },
     });
   } catch (error) {
     console.error("Admin user POST error:", error);
@@ -172,21 +103,26 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: "User ID is required." }, { status: 400 });
     }
 
+    const updates: any = {};
+    if (role) updates.role = role;
+    if (typeof isActive === "boolean") updates.isActive = isActive;
+
+    const updatedUser = prebackend.updateUser(userId, updates);
+
+    // Optional background sync
     try {
       await prisma.user.update({
         where: { id: userId },
-        data: {
-          ...(role ? { role } : {}),
-          ...(typeof isActive === "boolean" ? { isActive } : {}),
-        },
+        data: updates,
       });
-    } catch (err) {
-      console.warn("DB fallback for admin user PUT:", err);
+    } catch {
+      // Prisma offline
     }
 
     return NextResponse.json({
       success: true,
-      message: "User role / access status updated successfully.",
+      message: "User role / access status updated and saved successfully.",
+      user: updatedUser,
     });
   } catch (error) {
     console.error("Admin user PUT error:", error);
@@ -203,12 +139,15 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "User ID is required." }, { status: 400 });
     }
 
+    prebackend.deleteUser(userId);
+
+    // Optional background sync
     try {
       await prisma.user.delete({
         where: { id: userId },
       });
-    } catch (err) {
-      console.warn("DB fallback for admin user DELETE:", err);
+    } catch {
+      // Prisma offline
     }
 
     return NextResponse.json({

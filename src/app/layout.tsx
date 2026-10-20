@@ -1,19 +1,25 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "GreenCampus AI | Next-Gen Sustainable Campus Intelligence",
+  title: "GreenCampus | Campus Sustainability & Energy Operations",
   description:
-    "Autonomous energy optimization, IoT water telemetry, smart waste management, and gamified campus eco-action powered by AI.",
+    "Institutional energy management, building sub-meter telemetry, facility maintenance workflows, and student sustainability initiatives.",
   keywords: [
-    "Sustainable Campus",
-    "Smart Campus",
-    "Energy Management",
-    "IoT Telemetry",
-    "Net Zero",
-    "Green Campus AI",
+    "Campus Sustainability",
+    "Facility Management",
+    "Building Energy Operations",
+    "IoT Sub-Metering",
+    "Higher Education ESG",
   ],
-  authors: [{ name: "GreenCampus AI Engineering Team" }],
+  authors: [{ name: "Campus Facilities & Sustainability Division" }],
 };
 
 export default function RootLayout({
@@ -23,7 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className="min-h-screen bg-slate-950 font-sans text-slate-100 antialiased overflow-x-hidden">
+      <body className={`${inter.className} min-h-screen bg-[#090D16] text-slate-100 antialiased overflow-x-hidden`}>
         {children}
       </body>
     </html>

@@ -11,7 +11,6 @@ import {
   Utensils,
   Zap,
   Trash2,
-  Sparkles,
   TrendingDown,
   ArrowRight,
   History,
@@ -243,9 +242,9 @@ export default function StudentCalculatorPage() {
                 type="submit"
                 variant="eco"
                 disabled={calculating}
-                className="w-full text-xs font-bold gap-2 py-3 shadow-lg shadow-emerald-600/20"
+                className="w-full text-xs font-semibold gap-2 py-2.5"
               >
-                <Sparkles className="h-4 w-4" />
+                <Calculator className="h-4 w-4" />
                 {calculating ? "Calculating Carbon Emissions..." : "Calculate & Save Audit (+40 PTS)"}
               </Button>
             </form>
@@ -306,12 +305,12 @@ export default function StudentCalculatorPage() {
 
                 {/* AI Sustainability Advisor Card */}
                 {result.aiTip && (
-                  <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 space-y-1">
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-300">
-                      <Sparkles className="h-4 w-4 text-amber-300" />
-                      GreenCampus AI Decarbonization Tip:
+                  <div className="p-3.5 rounded-lg bg-[#090D16] border border-slate-800 space-y-1">
+                    <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400">
+                      <Leaf className="h-4 w-4" />
+                      Recommended Action:
                     </div>
-                    <p className="text-xs text-slate-200 leading-relaxed">{result.aiTip}</p>
+                    <p className="text-xs text-slate-300 leading-relaxed">{result.aiTip}</p>
                   </div>
                 )}
               </CardContent>

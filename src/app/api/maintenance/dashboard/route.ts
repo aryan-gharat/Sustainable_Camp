@@ -1,45 +1,43 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
-import prisma from "@/lib/prisma";
+import prebackend from "@/lib/prebackend";
 
 export async function GET() {
   try {
     const session = await getSession();
     const userId = session?.userId;
+    const rawDb = prebackend.getRawDb();
 
     let engineerName = "Carlos Mendez";
-    let activeWorkOrdersCount = 5;
-    let inProgressCount = 2;
-    let resolvedTodayCount = 4;
-    let totalCarbonPreventedKg = 680.0;
-    let activeLeakAlertsCount = 1;
-
-    try {
-      if (userId) {
-        const user = await prisma.user.findUnique({
-          where: { id: userId },
-          select: { name: true },
-        });
-        if (user?.name) engineerName = user.name;
-
-        const dbActiveWO = await prisma.workOrder.count({
-          where: { status: { in: ["SUBMITTED", "ACKNOWLEDGED", "ASSIGNED", "IN_PROGRESS"] } },
-        });
-        if (dbActiveWO > 0) activeWorkOrdersCount = dbActiveWO;
-
-        const dbInProgressWO = await prisma.workOrder.count({
-          where: { status: "IN_PROGRESS" },
-        });
-        inProgressCount = dbInProgressWO;
-
-        const dbResolvedWO = await prisma.workOrder.count({
-          where: { status: "RESOLVED" },
-        });
-        if (dbResolvedWO > 0) resolvedTodayCount = dbResolvedWO;
-      }
-    } catch (err) {
-      console.warn("DB fallback for maintenance dashboard GET:", err);
+    if (userId) {
+      const u = prebackend.getUserById(userId);
+      if (u?.name) engineerName = u.name;
     }
+
+    const activeWorkOrdersCount = rawDb.workOrders.filter(
+      (w) => w.status !== "RESOLVED" && w.status !== "CANCELLED"
+    ).length;
+
+    const inProgressCount = rawDb.workOrders.filter((w) => w.status === "IN_PROGRESS").length;
+    const resolvedTodayCount = rawDb.workOrders.filter((w) => w.status === "RESOLVED").length;
+    const activeLeakAlertsCount = rawDb.anomalyAlerts.filter((a) => !a.isResolved).length;
+
+    const urgentWorkOrdersPreview = rawDb.workOrders
+      .filter((w) => w.status !== "RESOLVED" && w.status !== "CANCELLED")
+      .slice(0, 3)
+      .map((w) => ({
+        id: w.id,
+        workOrderNumber: w.workOrderNumber,
+        title: w.title,
+        category: w.category,
+        priority: w.priority,
+        status: w.status,
+        locationDetails: w.locationDetails,
+        buildingName: w.buildingName || "Campus Infrastructure",
+        reportedBy: "Student Eco-Advocate",
+        estimatedCarbonLossKg: w.estimatedCarbonLossKg,
+        createdAt: w.createdAt,
+      }));
 
     return NextResponse.json({
       success: true,
@@ -48,37 +46,10 @@ export async function GET() {
         activeWorkOrdersCount,
         inProgressCount,
         resolvedTodayCount,
-        totalCarbonPreventedKg,
+        totalCarbonPreventedKg: 680.0,
         activeLeakAlertsCount,
       },
-      urgentWorkOrdersPreview: [
-        {
-          id: "wo-101",
-          workOrderNumber: "WO-2026-081",
-          title: "Chilled Water Leak in Science Complex",
-          category: "PLUMBING_LEAK",
-          priority: "HIGH",
-          status: "IN_PROGRESS",
-          locationDetails: "Science Complex Basement Mechanical Room B",
-          buildingName: "Solar Science & Tech Complex",
-          reportedBy: "Aiden Sharma (Student)",
-          estimatedCarbonLossKg: 45.0,
-          createdAt: new Date(Date.now() - 3600000 * 4).toISOString(),
-        },
-        {
-          id: "wo-102",
-          workOrderNumber: "WO-2026-084",
-          title: "Unnecessary Overnight Hallway Lighting Surge",
-          category: "ELECTRICAL_EFFICIENCY",
-          priority: "MEDIUM",
-          status: "ASSIGNED",
-          locationDetails: "Verdant Quad 3rd Floor East Wing",
-          buildingName: "Verdant Academic Quad",
-          reportedBy: "Maya Lin (Student)",
-          estimatedCarbonLossKg: 32.0,
-          createdAt: new Date(Date.now() - 3600000 * 10).toISOString(),
-        },
-      ],
+      urgentWorkOrdersPreview,
     });
   } catch (error) {
     console.error("Maintenance dashboard API error:", error);

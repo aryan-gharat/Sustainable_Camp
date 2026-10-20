@@ -36,7 +36,7 @@ const ROLE_OPTIONS: {
   {
     role: "FACULTY",
     title: "Faculty",
-    desc: "Manage classroom energy, track research grants",
+    desc: "Classroom energy limits, lab audits & research grants",
     icon: School,
   },
   {
@@ -108,16 +108,16 @@ export function RegisterForm() {
   return (
     <div className="w-full max-w-lg space-y-6">
       <div className="space-y-1.5 text-center">
-        <h2 className="text-2xl font-bold tracking-tight text-white">
-          Create GreenCampus AI Account
+        <h2 className="text-2xl font-bold tracking-tight text-slate-100">
+          Register Institutional Access
         </h2>
         <p className="text-xs text-slate-400">
-          Join your university's intelligent sustainability infrastructure
+          Create verified campus credentials for facility operations and energy analytics
         </p>
       </div>
 
       {error && (
-        <div className="flex items-start gap-2.5 rounded-lg border border-rose-500/40 bg-rose-950/30 p-3 text-xs text-rose-300">
+        <div className="flex items-start gap-2.5 rounded-md border border-rose-800/60 bg-rose-950/40 p-3 text-xs text-rose-300">
           <AlertCircle className="h-4 w-4 shrink-0 text-rose-400 mt-0.5" />
           <p>{error}</p>
         </div>
@@ -126,8 +126,8 @@ export function RegisterForm() {
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Role Selector Cards */}
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-            Select Your Campus Role
+          <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+            Select Designated Campus Role
           </label>
           <div className="grid grid-cols-2 gap-2">
             {ROLE_OPTIONS.map((item) => {
@@ -139,24 +139,24 @@ export function RegisterForm() {
                   key={item.role}
                   onClick={() => setRole(item.role)}
                   className={cn(
-                    "flex flex-col text-left p-3 rounded-xl border transition duration-200",
+                    "flex flex-col text-left p-3 rounded-lg border transition",
                     isSelected
-                      ? "bg-emerald-950/40 border-emerald-500/50 text-white shadow-md shadow-emerald-500/10 ring-1 ring-emerald-500/30"
-                      : "bg-slate-900/60 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200"
+                      ? "bg-slate-800 border-emerald-500/80 text-white shadow-sm"
+                      : "bg-[#0F1626] border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200"
                   )}
                 >
                   <div className="flex items-center justify-between mb-1">
                     <Icon
                       className={cn(
                         "h-4 w-4",
-                        isSelected ? "text-emerald-400" : "text-slate-500"
+                        isSelected ? "text-emerald-400" : "text-slate-400"
                       )}
                     />
                     {isSelected && (
                       <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
                     )}
                   </div>
-                  <span className="text-xs font-semibold text-white">
+                  <span className="text-xs font-semibold text-slate-200">
                     {item.title}
                   </span>
                   <span className="text-[11px] text-slate-400 leading-snug line-clamp-1">
@@ -196,7 +196,7 @@ export function RegisterForm() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="arivera@greencampus.ai"
+                placeholder="arivera@university.edu"
                 className="pl-9 text-xs"
                 required
               />
@@ -261,7 +261,7 @@ export function RegisterForm() {
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Initializing Campus Identity...
+              Registering Account...
             </>
           ) : (
             "Complete Registration & Enter Console"
@@ -275,7 +275,7 @@ export function RegisterForm() {
           href="/login"
           className="font-medium text-emerald-400 hover:text-emerald-300 underline underline-offset-4"
         >
-          Log in with existing credentials
+          Sign in with existing credentials
         </Link>
       </div>
     </div>

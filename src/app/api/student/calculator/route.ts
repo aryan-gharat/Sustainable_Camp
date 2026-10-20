@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import prebackend from "@/lib/prebackend";
 
 // Formula emission factors (in kg CO2e per unit per year)
 const COMMUTE_FACTORS: Record<string, number> = {
@@ -27,16 +28,8 @@ export async function GET() {
 
     let calculationHistory: any[] = [];
 
-    try {
-      if (userId) {
-        calculationHistory = await prisma.carbonCalculation.findMany({
-          where: { userId },
-          orderBy: { createdAt: "desc" },
-          take: 5,
-        });
-      }
-    } catch (err) {
-      console.warn("DB fallback for carbon calculator GET:", err);
+    if (userId) {
+      calculationHistory = prebackend.getCalculationsForUser(userId, 5);
     }
 
     if (calculationHistory.length === 0) {
@@ -69,7 +62,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const session = await getSession();
-    const userId = session?.userId;
+    const userId = session?.userId || "usr-stu-01";
     const body = await request.json();
 
     const {
@@ -110,68 +103,59 @@ export async function POST(request: NextRequest) {
       aiTip = "Exceptional eco performance! You are currently producing 40% less GHG emissions than the national student average of 3,200 kg CO2/year.";
     }
 
-    let savedCalc: any = null;
+    // Persist calculation and award +40 points in Pre-Backend store
+    const savedCalc = prebackend.createCalculation({
+      userId,
+      commuteMode,
+      commuteKmPerWeek: km,
+      dietType,
+      dormElectricityHours: electricityHours,
+      recyclingRate: recRate,
+      totalAnnualKgCo2,
+      transportKg,
+      dietKg,
+      energyKg,
+      wasteKg,
+      aiTip,
+    });
 
-    if (userId) {
-      try {
-        savedCalc = await prisma.carbonCalculation.create({
-          data: {
-            userId,
-            commuteMode,
-            commuteKmPerWeek: km,
-            dietType,
-            dormElectricityHours: electricityHours,
-            recyclingRate: recRate,
-            totalAnnualKgCo2,
-            transportKg,
-            dietKg,
-            energyKg,
-            wasteKg,
-            aiTip,
-          },
-        });
-
-        // Award eco-points for calculating footprint
-        await prisma.ecoPointLog.create({
-          data: {
-            userId,
-            points: 40,
-            reason: "Completed annual carbon footprint audit",
-          },
-        });
-
-        await prisma.profile.update({
-          where: { userId },
-          data: {
-            totalEcoPoints: { increment: 40 },
-          },
-        });
-      } catch (err) {
-        console.warn("DB fallback for carbon calculation POST:", err);
-      }
-    }
-
-    if (!savedCalc) {
-      savedCalc = {
-        id: `calc-${Date.now()}`,
-        commuteMode,
-        commuteKmPerWeek: km,
-        dietType,
-        dormElectricityHours: electricityHours,
-        recyclingRate: recRate,
-        totalAnnualKgCo2,
-        transportKg,
-        dietKg,
-        energyKg,
-        wasteKg,
-        aiTip,
-        createdAt: new Date().toISOString(),
-      };
+    // Optional background sync with Prisma
+    try {
+      await prisma.carbonCalculation.create({
+        data: {
+          id: savedCalc.id,
+          userId,
+          commuteMode,
+          commuteKmPerWeek: km,
+          dietType,
+          dormElectricityHours: electricityHours,
+          recyclingRate: recRate,
+          totalAnnualKgCo2,
+          transportKg,
+          dietKg,
+          energyKg,
+          wasteKg,
+          aiTip,
+        },
+      });
+      await prisma.ecoPointLog.create({
+        data: {
+          userId,
+          points: 40,
+          reason: "Completed annual carbon footprint audit",
+        },
+      });
+      await prisma.profile.update({
+        where: { userId },
+        data: { totalEcoPoints: { increment: 40 } },
+      });
+    } catch {
+      // Prisma offline
     }
 
     return NextResponse.json({
       success: true,
-      message: "Carbon calculation complete! +40 Eco-Points awarded.",
+      message: "Carbon calculation saved to personal history! +40 Eco-Points awarded.",
       result: savedCalc,
     });
   } catch (error) {

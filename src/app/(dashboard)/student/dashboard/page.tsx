@@ -12,7 +12,6 @@ import {
   Medal,
   AlertTriangle,
   ArrowRight,
-  Sparkles,
   Leaf,
   Calendar,
   Gift,
@@ -60,13 +59,13 @@ export default function StudentDashboardPage() {
         <div>
           <div className="flex items-center gap-2 mb-1">
             <RoleBadge role="STUDENT" size="sm" />
-            <span className="text-xs text-emerald-400 font-semibold bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-500/30">
-              Tier 4 Campus Green Pioneer
+            <span className="text-[11px] text-slate-300 font-medium bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
+              Student Sustainability Council
             </span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white flex items-center gap-2">
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-100 flex items-center gap-2">
             Student Eco-Action Hub
-            <Sparkles className="h-5 w-5 text-amber-400" />
+            <Leaf className="h-5 w-5 text-emerald-400" />
           </h2>
           <p className="text-xs sm:text-sm text-slate-400 mt-1">
             Track your verified carbon offset, active campus quests, and redeem sustainable rewards
@@ -127,7 +126,7 @@ export default function StudentDashboardPage() {
           unit="Days"
           change="Personal Best!"
           changeType="positive"
-          iconName="sparkles"
+          iconName="activity"
           category="points"
           description="Active daily green actions"
         />

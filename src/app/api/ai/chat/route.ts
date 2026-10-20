@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
-import prisma from "@/lib/prisma";
+import prebackend from "@/lib/prebackend";
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,7 +21,14 @@ export async function POST(request: NextRequest) {
     let suggestedAction = "";
 
     // 1. Energy Saving Recommendations
-    if (query.includes("energy") || query.includes("power") || query.includes("hvac") || query.includes("solar") || query.includes("light") || topic === "ENERGY") {
+    if (
+      query.includes("energy") ||
+      query.includes("power") ||
+      query.includes("hvac") ||
+      query.includes("solar") ||
+      query.includes("light") ||
+      topic === "ENERGY"
+    ) {
       category = "ENERGY";
       projectedCo2SavingsKg = 145.0;
       projectedCostSavingsUsd = 42.0;
@@ -39,7 +46,13 @@ Based on live telemetry, campus HVAC and lighting account for 58% of baseline po
 *Estimated Annual Carbon Impact:* **-${projectedCo2SavingsKg} kg CO2e / year** per room.`;
     }
     // 2. Water Saving Tips
-    else if (query.includes("water") || query.includes("leak") || query.includes("rain") || query.includes("plumb") || topic === "WATER") {
+    else if (
+      query.includes("water") ||
+      query.includes("leak") ||
+      query.includes("rain") ||
+      query.includes("plumb") ||
+      topic === "WATER"
+    ) {
       category = "WATER";
       projectedCo2SavingsKg = 85.0;
       projectedCostSavingsUsd = 30.0;
@@ -57,7 +70,13 @@ Campus rainwater harvesting currently supplies 42% of non-potable needs.
 *Projected Water Saved:* **+125,000 Liters / year**.`;
     }
     // 3. Waste Reduction Suggestions
-    else if (query.includes("waste") || query.includes("recycle") || query.includes("plastic") || query.includes("compost") || topic === "WASTE") {
+    else if (
+      query.includes("waste") ||
+      query.includes("recycle") ||
+      query.includes("plastic") ||
+      query.includes("compost") ||
+      topic === "WASTE"
+    ) {
       category = "WASTE";
       projectedCo2SavingsKg = 110.0;
       projectedCostSavingsUsd = 25.0;
@@ -75,7 +94,14 @@ Current campus landfill diversion rate is **86.2%**.
 *Earnable Eco-Points:* **+120 PTS** per completed waste reduction quest.`;
     }
     // 4. Carbon Footprint Insights
-    else if (query.includes("carbon") || query.includes("co2") || query.includes("commute") || query.includes("offset") || query.includes("tree") || topic === "CARBON") {
+    else if (
+      query.includes("carbon") ||
+      query.includes("co2") ||
+      query.includes("commute") ||
+      query.includes("offset") ||
+      query.includes("tree") ||
+      topic === "CARBON"
+    ) {
       category = "CARBON";
       projectedCo2SavingsKg = 320.0;
       projectedCostSavingsUsd = 85.0;
@@ -110,6 +136,25 @@ Welcome! I am your AI climate & sustainability advisor. I monitor real-time camp
 • 🌿 **Carbon Decarbonization:** Personal GHG footprint calculation & zero-emission commutes.
 
 Feel free to ask me any specific question about your dorm, lab energy draw, or eco-points!`;
+    }
+
+    // Save insight to Pre-Backend if relevant
+    if (projectedCo2SavingsKg > 0) {
+      try {
+        prebackend.createAIInsight({
+          targetType: userRole === "ADMIN" ? "CAMPUS_WIDE" : "STUDENT",
+          title: `AI Recommendation: ${category} Conservation`,
+          insightSummary: suggestedAction,
+          suggestedAction,
+          confidenceScore: 0.92,
+          projectedSavingsKwh: projectedCo2SavingsKg * 2.2,
+          projectedSavingsUsd: projectedCostSavingsUsd,
+          projectedCarbonReductionKg: projectedCo2SavingsKg,
+          status: "NEW",
+        });
+      } catch {
+        // Non-critical logging
+      }
     }
 
     return NextResponse.json({

@@ -14,7 +14,6 @@ import {
   ArrowRight,
   CheckCircle2,
   Clock,
-  Sparkles,
   AlertTriangle,
   Zap,
 } from "lucide-react";

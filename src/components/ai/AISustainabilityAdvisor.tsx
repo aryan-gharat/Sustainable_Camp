@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
-  Sparkles,
   MessageSquare,
   X,
   Send,
@@ -39,7 +38,7 @@ export function AISustainabilityAdvisor() {
     {
       id: "msg-welcome",
       sender: "ai",
-      text: "👋 Hi! I am **GreenCampus AI**, your autonomous sustainability advisor. Ask me for personalized energy saving recommendations, water conservation tips, waste reduction advice, or carbon footprint insights!",
+      text: "Hello! I can answer questions regarding campus utility telemetry, energy reduction targets, building recycling guidelines, and preventive maintenance procedures.",
       timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     },
   ]);
@@ -128,64 +127,58 @@ export function AISustainabilityAdvisor() {
         {!isOpen && (
           <button
             onClick={() => setIsOpen(true)}
-            className="relative group flex items-center gap-2 px-4 py-3 rounded-full bg-gradient-to-r from-emerald-500 via-teal-600 to-emerald-700 text-white font-bold text-xs shadow-2xl shadow-emerald-500/40 hover:scale-105 transition-all duration-300 border border-emerald-400/40"
+            className="flex items-center gap-2 px-3.5 py-2.5 rounded-full bg-[#0F1626] text-slate-200 border border-slate-700 hover:border-slate-500 hover:bg-[#141E34] text-xs font-medium shadow-xl transition"
           >
-            <div className="relative">
-              <Sparkles className="h-5 w-5 text-amber-300 animate-pulse" />
-              <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400"></span>
-              </span>
-            </div>
-            <span>AI Sustainability Advisor</span>
+            <MessageSquare className="h-4 w-4 text-emerald-400" />
+            <span>Sustainability Helpdesk</span>
           </button>
         )}
       </div>
 
-      {/* Modern Glassmorphism Chat Drawer / Window */}
+      {/* Professional Chat Drawer / Window */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 z-50 w-[92vw] sm:w-[420px] h-[580px] glass-card border border-emerald-500/40 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-300">
+        <div className="fixed bottom-6 right-6 z-50 w-[92vw] sm:w-[420px] h-[560px] bg-[#0C1220] border border-slate-700 rounded-xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200">
           {/* Header Bar */}
-          <div className="p-4 bg-slate-950/90 border-b border-slate-800 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-700 flex items-center justify-center text-white shadow-md shadow-emerald-500/30">
-                <Bot className="h-5 w-5" />
+          <div className="p-3.5 bg-[#090D16] border-b border-slate-800 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="h-8 w-8 rounded-md bg-emerald-950/60 border border-emerald-700/60 flex items-center justify-center text-emerald-400">
+                <Bot className="h-4 w-4" />
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
-                  <h3 className="text-sm font-bold text-white">GreenCampus AI Advisor</h3>
-                  <span className="rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-extrabold px-1.5 py-0.2 border border-emerald-500/30">
-                    2.0 Live
+                  <h3 className="text-xs font-semibold text-slate-100">Campus Sustainability Desk</h3>
+                  <span className="rounded bg-slate-800 text-slate-300 text-[10px] font-medium px-1.5 py-0.2 border border-slate-700">
+                    Online
                   </span>
                 </div>
-                <p className="text-[10px] text-slate-400">Autonomous Decarbonization Intelligence</p>
+                <p className="text-[10px] text-slate-400">Guidelines & Telemetry Inquiries</p>
               </div>
             </div>
 
             <div className="flex items-center gap-1">
               <button
                 onClick={() => setMessages([messages[0]])}
-                title="Clear Chat"
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+                title="Clear Conversation"
+                className="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800 transition"
               >
-                <RefreshCw className="h-4 w-4" />
+                <RefreshCw className="h-3.5 w-3.5" />
               </button>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+                className="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-800 transition"
               >
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4" />
               </button>
             </div>
           </div>
 
           {/* Quick Prompt Pills */}
-          <div className="px-3 py-2 bg-slate-950/60 border-b border-slate-800/60 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+          <div className="px-3 py-2 bg-[#090D16] border-b border-slate-800 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
             {quickPrompts.map((qp, idx) => (
               <button
                 key={idx}
                 onClick={() => handleSend(qp.prompt)}
-                className="shrink-0 px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 hover:border-emerald-500/40 text-[10px] font-semibold text-slate-300 hover:text-emerald-300 transition"
+                className="shrink-0 px-2.5 py-1 rounded bg-slate-800/80 border border-slate-700 hover:border-slate-500 text-[10px] font-medium text-slate-300 hover:text-white transition"
               >
                 {qp.label}
               </button>
@@ -193,57 +186,57 @@ export function AISustainabilityAdvisor() {
           </div>
 
           {/* Messages Conversation Log */}
-          <div className="flex-1 p-4 overflow-y-auto space-y-4 text-xs">
+          <div className="flex-1 p-3.5 overflow-y-auto space-y-3 text-xs bg-[#0A0F1A]">
             {messages.map((msg) => (
               <div
                 key={msg.id}
                 className={`flex gap-2.5 ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
               >
                 {msg.sender === "ai" && (
-                  <div className="h-7 w-7 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5">
-                    <Bot className="h-4 w-4" />
+                  <div className="h-6 w-6 rounded bg-slate-800 border border-slate-700 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5">
+                    <Bot className="h-3.5 w-3.5" />
                   </div>
                 )}
 
                 <div
-                  className={`max-w-[85%] rounded-2xl p-3.5 space-y-2 leading-relaxed ${
+                  className={`max-w-[85%] rounded-lg p-3 space-y-1.5 leading-relaxed text-xs ${
                     msg.sender === "user"
-                      ? "bg-gradient-to-r from-emerald-600 to-teal-700 text-white font-medium rounded-tr-none shadow-md shadow-emerald-900/30"
-                      : "bg-slate-900/90 border border-slate-800 text-slate-200 rounded-tl-none shadow-md"
+                      ? "bg-emerald-700 text-white font-medium"
+                      : "bg-[#0F1626] border border-slate-800 text-slate-200"
                   }`}
                 >
                   {/* Message Body */}
-                  <div className="whitespace-pre-wrap font-sans text-xs">
+                  <div className="whitespace-pre-wrap font-sans">
                     {msg.text}
                   </div>
 
                   {/* Structured Recommendation Card */}
                   {msg.recommendation && msg.recommendation.projectedCo2SavingsKg > 0 && (
-                    <div className="mt-2.5 p-3 rounded-xl bg-slate-950 border border-emerald-500/30 text-[11px] space-y-1.5">
-                      <div className="flex items-center justify-between text-emerald-400 font-bold">
+                    <div className="mt-2 p-2.5 rounded bg-[#090D16] border border-slate-800 text-[11px] space-y-1">
+                      <div className="flex items-center justify-between text-emerald-400 font-semibold">
                         <span className="flex items-center gap-1">
                           <TrendingDown className="h-3.5 w-3.5" />
                           Projected CO2 Impact
                         </span>
-                        <span className="bg-emerald-500/20 px-2 py-0.5 rounded text-[10px] border border-emerald-500/30">
+                        <span className="bg-emerald-950/60 px-1.5 py-0.5 rounded text-[10px] border border-emerald-800 text-emerald-300">
                           -{msg.recommendation.projectedCo2SavingsKg} kg/yr
                         </span>
                       </div>
                       {msg.recommendation.suggestedAction && (
-                        <p className="text-slate-300 text-[10px] italic">
-                          <strong>Next Step: </strong>{msg.recommendation.suggestedAction}
+                        <p className="text-slate-300 text-[10px]">
+                          <strong>Action: </strong>{msg.recommendation.suggestedAction}
                         </p>
                       )}
                     </div>
                   )}
 
                   {/* Time & Copy */}
-                  <div className={`flex items-center justify-between text-[9px] pt-1 ${msg.sender === "user" ? "text-emerald-200" : "text-slate-400"}`}>
+                  <div className={`flex items-center justify-between text-[9px] pt-1 ${msg.sender === "user" ? "text-emerald-200" : "text-slate-500"}`}>
                     <span>{msg.timestamp}</span>
                     {msg.sender === "ai" && (
                       <button
                         onClick={() => copyToClipboard(msg.text, msg.id)}
-                        className="hover:text-white transition flex items-center gap-1"
+                        className="hover:text-slate-300 transition flex items-center gap-1"
                       >
                         {copiedId === msg.id ? <Check className="h-3 w-3 text-emerald-400" /> : <Copy className="h-3 w-3" />}
                         {copiedId === msg.id ? "Copied" : "Copy"}
@@ -253,8 +246,8 @@ export function AISustainabilityAdvisor() {
                 </div>
 
                 {msg.sender === "user" && (
-                  <div className="h-7 w-7 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-white shrink-0 mt-0.5">
-                    <User className="h-4 w-4" />
+                  <div className="h-6 w-6 rounded bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 shrink-0 mt-0.5">
+                    <User className="h-3.5 w-3.5" />
                   </div>
                 )}
               </div>

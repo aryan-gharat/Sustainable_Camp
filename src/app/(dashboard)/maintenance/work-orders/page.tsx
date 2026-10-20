@@ -12,7 +12,7 @@ import {
   MapPin,
   AlertTriangle,
   Play,
-  Sparkles,
+  ClipboardCheck,
   Send,
   Filter,
   User,
@@ -291,14 +291,14 @@ export default function MaintenanceWorkOrdersPage() {
 
       {/* Resolution Notes & After-Fix Photo Upload Modal */}
       {selectedWO && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-          <div className="w-full max-w-lg glass-card border border-emerald-500/40 rounded-2xl p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4">
+          <div className="w-full max-w-lg bg-[#0F1626] border border-slate-700 rounded-xl p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-emerald-400" />
-                Complete Repair & Upload After-Fix Photo
+              <h3 className="text-sm font-semibold text-slate-100 flex items-center gap-2">
+                <ClipboardCheck className="h-4 w-4 text-emerald-400" />
+                Complete Repair & Upload Verification Photo
               </h3>
-              <button onClick={() => setSelectedWO(null)} className="text-slate-400 hover:text-white text-lg font-bold">
+              <button onClick={() => setSelectedWO(null)} className="text-slate-400 hover:text-white text-sm font-bold">
                 ✕
               </button>
             </div>

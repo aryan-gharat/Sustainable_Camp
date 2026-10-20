@@ -1,67 +1,74 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
-import prisma from "@/lib/prisma";
+import prebackend from "@/lib/prebackend";
 
 export async function GET() {
   try {
     const session = await getSession();
     const userId = session?.userId;
+    const rawDb = prebackend.getRawDb();
 
-    let userProfile = null;
     let totalPoints = 580;
     let carbonSavedKg = 122.4;
     let waterSavedLiters = 1400.0;
     let streakDays = 19;
-    let activeQuestsCount = 3;
     let verifiedReportsCount = 2;
-    let upcomingEventsCount = 4;
+    let upcomingEventsCount = rawDb.campusEvents.length;
+    let activeQuestsCount = rawDb.greenQuests.length;
     let campusRank = 4;
 
     if (userId) {
-      try {
-        const user = await prisma.user.findUnique({
-          where: { id: userId },
-          include: {
-            profile: true,
-            questCompletions: { include: { quest: true } },
-            sustainabilityReports: true,
-            eventRegistrations: { include: { event: true } },
-            carbonCalculations: { orderBy: { createdAt: "desc" }, take: 1 },
-          },
-        });
+      const user = prebackend.getUserById(userId);
+      const profile = prebackend.getProfileByUserId(userId);
 
-        if (user && user.profile) {
-          totalPoints = user.profile.totalEcoPoints;
-          carbonSavedKg = user.profile.carbonSavedKg;
-          waterSavedLiters = user.profile.waterSavedLiters;
-          streakDays = user.profile.streakDays;
-          verifiedReportsCount = user.sustainabilityReports.filter(r => r.status === "VERIFIED").length;
-          upcomingEventsCount = user.eventRegistrations.filter(er => new Date(er.event.eventDate) > new Date()).length;
-        }
+      if (profile) {
+        totalPoints = profile.totalEcoPoints;
+        carbonSavedKg = profile.carbonSavedKg;
+        waterSavedLiters = profile.waterSavedLiters;
+        streakDays = profile.streakDays;
+      }
 
-        // Calculate rank if DB active
-        const higherScoringUsers = await prisma.profile.count({
-          where: { totalEcoPoints: { gt: totalPoints } },
+      const userReports = rawDb.studentReports.filter((r) => r.userId === userId);
+      verifiedReportsCount = userReports.filter((r) => r.status === "VERIFIED" || r.status === "RESOLVED").length;
+
+      const userRegistrations = rawDb.eventRegistrations.filter((er) => er.userId === userId);
+      upcomingEventsCount = userRegistrations.length > 0 ? userRegistrations.length : rawDb.campusEvents.length;
+
+      // Dynamic rank calculation
+      const allStudentProfiles = rawDb.users
+        .filter((u) => u.role === "STUDENT")
+        .map((u) => {
+          const p = rawDb.profiles.find((prof) => prof.userId === u.id);
+          return p?.totalEcoPoints ?? 0;
+        })
+        .sort((a, b) => b - a);
+
+      const rankIndex = allStudentProfiles.findIndex((pts) => pts <= totalPoints);
+      campusRank = rankIndex !== -1 ? rankIndex + 1 : 1;
+    }
+
+    // Dynamic recent activity logs for this student
+    const recentActivity: any[] = [];
+    if (userId) {
+      const userLogs = rawDb.ecoPointLogs
+        .filter((l) => l.userId === userId)
+        .slice(-4)
+        .reverse();
+
+      for (const log of userLogs) {
+        recentActivity.push({
+          id: log.id,
+          type: log.points > 0 ? "POINTS_AWARDED" : "REWARD_REDEEMED",
+          title: log.reason,
+          points: log.points,
+          date: "Recently",
+          status: log.points > 0 ? "VERIFIED" : "REDEEMED",
         });
-        campusRank = higherScoringUsers + 1;
-      } catch (err) {
-        console.warn("Database fallback for student dashboard API:", err);
       }
     }
 
-    return NextResponse.json({
-      success: true,
-      stats: {
-        totalEcoPoints: totalPoints,
-        carbonSavedKg,
-        waterSavedLiters,
-        streakDays,
-        campusRank,
-        activeQuestsCount,
-        verifiedReportsCount,
-        upcomingEventsCount,
-      },
-      recentActivity: [
+    if (recentActivity.length === 0) {
+      recentActivity.push(
         {
           id: "act-1",
           type: "QUEST_COMPLETED",
@@ -93,8 +100,23 @@ export async function GET() {
           points: -150,
           date: "3 days ago",
           status: "REDEEMED",
-        },
-      ],
+        }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      stats: {
+        totalEcoPoints: totalPoints,
+        carbonSavedKg,
+        waterSavedLiters,
+        streakDays,
+        campusRank,
+        activeQuestsCount,
+        verifiedReportsCount,
+        upcomingEventsCount,
+      },
+      recentActivity,
     });
   } catch (error) {
     console.error("Student dashboard API error:", error);
